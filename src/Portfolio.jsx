@@ -29,7 +29,7 @@ const PROFILE = {
   socials: {
     github: "https://github.com/nikhildahiyaa",
     linkedin: "https://www.linkedin.com/in/nikhil-dahiya/",
-    resume: "/resume.pdf", // put resume.pdf in /public
+    resume: "/Nikhil Dahiya Resume.pdf", // put resume.pdf in /public
   },
 };
 
