@@ -21,7 +21,7 @@ import {
 ========================= */
 const PROFILE = {
   name: "Nikhil Dahiya",
-  roleWords: ["Data Scientist", "Data Analyst", "BI Developer", "Machine Learning", "Forecasting"],
+  roleWords: ["Data Scientist", "Data Analyst", "Business Analyst", "BI Developer", "Machine Learning", "Forecasting"],
   location: "Vancouver, BC",
   blurb:
     "Data Analyst with experience in forecasting, A/B testing, and BI. I turn messy datasets into clear insights and operational wins.",
