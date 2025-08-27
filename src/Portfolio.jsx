@@ -2,8 +2,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./components/ui/button";
-// We only keep the subparts; we won't use the Card shell itself
-import { CardContent, CardDescription, CardHeader, CardTitle } from "./components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./components/ui/card";
 import { Badge } from "./components/ui/badge";
 import { Input } from "./components/ui/input";
 import { Textarea } from "./components/ui/textarea";
@@ -30,8 +29,7 @@ const PROFILE = {
   socials: {
     github: "https://github.com/nikhildahiyaa",
     linkedin: "https://www.linkedin.com/in/nikhil-dahiya/",
-    // Tip: avoid spaces in filenames; if you keep the space, encode it as %20
-    resume: "/Nikhil%20Dahiya%20Resume.pdf",
+    resume: "/Nikhil Dahiya Resume.pdf",
   },
 };
 
@@ -167,26 +165,17 @@ const CATEGORIES = [
 ];
 
 /* =========================
-   Small helpers
+   Tag chip — light style for white cards
 ========================= */
-
-// Force-light card that doesn't rely on theme variables.
-// This guarantees a white card on every device.
-const LightCard = ({ className = "", children }) => (
-  <div className={`rounded-2xl border border-slate-200 bg-white text-black shadow-sm ${className}`}>
-    {children}
-  </div>
-);
-
-// Dark card used for the Skills section
-const DarkCard = ({ className = "", children }) => (
-  <div className={`rounded-2xl border border-slate-800 bg-slate-900/80 ${className}`}>{children}</div>
-);
-
 const Tag = ({ label }) => (
-  <Badge className="rounded-full bg-slate-100 border border-slate-300 text-black">{label}</Badge>
+  <Badge className="rounded-full bg-slate-100 border border-slate-300 text-black">
+    {label}
+  </Badge>
 );
 
+/* =========================
+   Scroll spy
+========================= */
 const useScrollSpy = (ids) => {
   const [active, setActive] = useState(ids[0]);
   useEffect(() => {
@@ -244,7 +233,7 @@ export default function Portfolio() {
   return (
     <div>
       {/* Dark chrome */}
-      <div className="relative min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100 antialiased selection:bg-indigo-600/30 selection:text-white">
+      <div className="relative min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100">
         {/* decorative bloom */}
         <div className="pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(40%_40%_at_50%_15%,black,transparent_70%)]">
           <div className="absolute -top-40 left-1/2 -translate-x-1/2 h-96 w-[60rem] rounded-full bg-gradient-to-r from-fuchsia-600/20 via-cyan-500/20 to-indigo-600/20 blur-3xl" />
@@ -252,25 +241,39 @@ export default function Portfolio() {
 
         {/* Navbar */}
         <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-slate-900/70 border-b border-slate-800">
-          <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-            <a href="#home" className="font-semibold tracking-tight text-indigo-300">
-              {PROFILE.name}
-            </a>
-            <div className="hidden sm:flex items-center gap-6 text-sm">
+          <nav className="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            {/* Row 1: name + mobile resume */}
+            <div className="flex items-center justify-between">
+              <a href="#home" className="font-semibold tracking-tight text-indigo-300">
+                {PROFILE.name}
+              </a>
+              {/* show Resume on mobile too */}
+              <a href={PROFILE.socials.resume} className="sm:hidden">
+                <Button className="rounded-2xl bg-slate-800 text-slate-100 border border-slate-700 hover:bg-slate-700 h-8 px-3 text-xs">
+                  <FileDown className="h-3.5 w-3.5 mr-1" /> Resume
+                </Button>
+              </a>
+            </div>
+
+            {/* Row 2: links (scrollable on mobile) */}
+            <div className="flex items-center gap-6 text-sm overflow-x-auto whitespace-nowrap">
               {sections.map((id) => (
                 <a
                   key={id}
                   href={`#${id}`}
                   className={
-                    "hover:opacity-90 " + (active === id ? "text-indigo-300" : "text-slate-300")
+                    "hover:opacity-90 " +
+                    (active === id ? "text-indigo-300" : "text-slate-300")
                   }
                 >
                   {id.charAt(0).toUpperCase() + id.slice(1)}
                 </a>
               ))}
             </div>
-            <div className="flex items-center gap-2">
-              <a href={PROFILE.socials.resume} className="hidden sm:inline-block">
+
+            {/* Desktop resume button */}
+            <div className="hidden sm:flex items-center gap-2">
+              <a href={PROFILE.socials.resume}>
                 <Button className="rounded-2xl bg-slate-800 text-slate-100 border border-slate-700 hover:bg-slate-700">
                   <FileDown className="h-4 w-4 mr-2" /> Resume
                 </Button>
@@ -279,7 +282,7 @@ export default function Portfolio() {
           </nav>
         </header>
 
-        {/* Hero */}
+        {/* Hero (single column) */}
         <section id="home" className="scroll-mt-24 py-16 sm:py-24">
           <div className="max-w-6xl mx-auto px-4">
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
@@ -346,8 +349,8 @@ export default function Portfolio() {
               </p>
             </div>
 
-            {/* Education — forced light card */}
-            <LightCard>
+            {/* Education — LIGHT CARD / BLACK TEXT */}
+            <Card className="border border-slate-200 bg-white text-black">
               <CardHeader>
                 <CardTitle className="text-black">Education</CardTitle>
                 <CardDescription className="text-black/70">Formal training</CardDescription>
@@ -363,16 +366,16 @@ export default function Portfolio() {
                   </ul>
                 </div>
               </CardContent>
-            </LightCard>
+            </Card>
           </div>
         </section>
 
-        {/* Experience — forced light cards */}
+        {/* Experience — LIGHT CARDS / BLACK TEXT */}
         <section id="experience" className="scroll-mt-24 py-14 sm:py-20">
           <div className="max-w-6xl mx-auto px-4 space-y-6">
             <h2 className="text-2xl md:text-3xl font-semibold text-slate-100">Experience</h2>
 
-            <LightCard>
+            <Card className="border border-slate-200 bg-white text-black">
               <CardHeader>
                 <CardTitle className="text-black">Research Assistant — Beedie School of Business (SFU)</CardTitle>
                 <CardDescription className="text-black/70">Sept 2024 – Dec 2024 • Burnaby, BC</CardDescription>
@@ -381,9 +384,9 @@ export default function Portfolio() {
                 <p>Consolidated 23,700+ ratings, 62,700+ ad records, and box office data with Python ETL.</p>
                 <p>Time-series & lag regressions; early-week ads showed ~15% stronger weekend impact.</p>
               </CardContent>
-            </LightCard>
+            </Card>
 
-            <LightCard>
+            <Card className="border border-slate-200 bg-white text-black">
               <CardHeader>
                 <CardTitle className="text-black">Data Analyst — UBC Centre for Heart Lung Innovation</CardTitle>
                 <CardDescription className="text-black/70">Sept 2023 – Apr 2024 • Vancouver, BC</CardDescription>
@@ -392,9 +395,9 @@ export default function Portfolio() {
                 <p>Analyzed national cohort (5,176 participants) with SAS/STATA; logistic regressions & meta-analysis.</p>
                 <p>Found asbestos exposure associated with chronic cough (OR≈1.8, p&lt;0.01); consistent effects across 7/9 sites.</p>
               </CardContent>
-            </LightCard>
+            </Card>
 
-            <LightCard>
+            <Card className="border border-slate-200 bg-white text-black">
               <CardHeader>
                 <CardTitle className="text-black">AI/ML Intern — Ernst &amp; Young</CardTitle>
                 <CardDescription className="text-black/70">May 2022 – Aug 2022 • Gurugram, India</CardDescription>
@@ -403,35 +406,33 @@ export default function Portfolio() {
                 <p>Built OpenCV + EasyOCR redaction tool (regex-enhanced); ~95% ID detection accuracy.</p>
                 <p>Interactive GUI; reduced processing time by ~40% and improved privacy compliance.</p>
               </CardContent>
-            </LightCard>
+            </Card>
           </div>
         </section>
 
-        {/* Projects — forced light cards */}
+        {/* Projects — LIGHT CARDS / BLACK TEXT */}
         <section id="projects" className="scroll-mt-24 py-14 sm:py-20">
           <div className="max-w-6xl mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-semibold text-slate-100 mb-4">Projects</h2>
 
-            {/* sticky filter bar (dark) */}
-            <div className="sticky top-16 z-30 mb-6">
+            {/* filter bar (sticky only on md+) */}
+            <div className="md:sticky md:top-16 z-30 mb-6">
               <div className="backdrop-blur supports-[backdrop-filter]:bg-slate-900/70 border border-slate-800 rounded-xl p-3 overflow-x-auto">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <div className="hidden sm:flex items-center gap-2">
-                    {CATEGORIES.map((c) => (
-                      <Button
-                        key={c}
-                        className={`rounded-2xl text-sm ${
-                          cat === c
-                            ? "bg-indigo-600 text-white border border-indigo-600"
-                            : "bg-slate-900 text-slate-200 border border-slate-700 hover:bg-slate-800"
-                        }`}
-                        onClick={() => setCat(c)}
-                      >
-                        <Filter className="h-3.5 w-3.5 mr-1" />
-                        <span>{c}</span>
-                      </Button>
-                    ))}
-                  </div>
+                <div className="flex items-center gap-2 flex-nowrap">
+                  {CATEGORIES.map((c) => (
+                    <Button
+                      key={c}
+                      className={`rounded-2xl text-xs sm:text-sm ${
+                        cat === c
+                          ? "bg-indigo-600 text-white border border-indigo-600"
+                          : "bg-slate-900 text-slate-200 border border-slate-700 hover:bg-slate-800"
+                      }`}
+                      onClick={() => setCat(c)}
+                    >
+                      <Filter className="h-3.5 w-3.5 mr-1" />
+                      <span>{c}</span>
+                    </Button>
+                  ))}
                 </div>
               </div>
             </div>
@@ -447,7 +448,7 @@ export default function Portfolio() {
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <LightCard className="overflow-hidden hover:shadow-md transition-shadow">
+                    <Card className="overflow-hidden hover:shadow-md transition-shadow border border-slate-200 bg-white text-black">
                       <div className="relative h-40 bg-slate-200">
                         <img
                           src={p.cover}
@@ -480,7 +481,7 @@ export default function Portfolio() {
                           {p.links.report !== "#" && <Anchor href={p.links.report}>Report</Anchor>}
                         </div>
                       </CardContent>
-                    </LightCard>
+                    </Card>
                   </motion.div>
                 ))}
               </AnimatePresence>
@@ -488,10 +489,10 @@ export default function Portfolio() {
           </div>
         </section>
 
-        {/* Skills (dark chips) */}
+        {/* Skills (kept dark chips) */}
         <section id="skills" className="scroll-mt-24 py-14 sm:py-20">
           <div className="max-w-6xl mx-auto px-4 grid lg:grid-cols-2 gap-6">
-            <DarkCard>
+            <Card className="border border-slate-800 bg-slate-900/80">
               <CardHeader>
                 <CardTitle className="text-slate-100">Core stack</CardTitle>
                 <CardDescription className="text-slate-400">Daily drivers & comfort tools</CardDescription>
@@ -511,9 +512,9 @@ export default function Portfolio() {
                   </Badge>
                 ))}
               </CardContent>
-            </DarkCard>
+            </Card>
 
-            <DarkCard>
+            <Card className="border border-slate-800 bg-slate-900/80">
               <CardHeader>
                 <CardTitle className="text-slate-100">What I enjoy</CardTitle>
                 <CardDescription className="text-slate-400">Problems I reach for first</CardDescription>
@@ -528,15 +529,15 @@ export default function Portfolio() {
                   </Badge>
                 ))}
               </CardContent>
-            </DarkCard>
+            </Card>
           </div>
         </section>
 
-        {/* Contact — forced light card */}
+        {/* Contact — LIGHT CARD / BLACK TEXT (email line black) */}
         <section id="contact" className="scroll-mt-24 py-14 sm:py-20">
           <div className="max-w-6xl mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-slate-100">Contact</h2>
-            <LightCard>
+            <Card className="border border-slate-200 bg-white text-black">
               <CardHeader>
                 <CardTitle className="text-black">Let’s work together</CardTitle>
                 <CardDescription className="text-black/70">
@@ -571,7 +572,7 @@ export default function Portfolio() {
                   </p>
                 </form>
               </CardContent>
-            </LightCard>
+            </Card>
           </div>
         </section>
 
