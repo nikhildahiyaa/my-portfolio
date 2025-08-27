@@ -532,48 +532,75 @@ export default function Portfolio() {
           </div>
         </section>
 
-        {/* Contact — forced light card */}
-        <section id="contact" className="scroll-mt-24 py-14 sm:py-20">
-          <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-slate-100">Contact</h2>
-            <LightCard>
-              <CardHeader>
-                <CardTitle className="text-black">Let’s work together</CardTitle>
-                <CardDescription className="text-black/70">
-                  Send a note and I’ll get back within 1–2 business days.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form
-                  className="grid sm:grid-cols-2 gap-4"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    alert("Thanks! This demo form is client-side only — wire it to your email/API.");
-                  }}
-                >
-                  <Input placeholder="Your name" required className="bg-white border-slate-300 text-black" />
-                  <Input type="email" placeholder="Your email" required className="bg-white border-slate-300 text-black" />
-                  <div className="sm:col-span-2">
-                    <Input placeholder="Subject" required className="bg-white border-slate-300 text-black" />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <Textarea placeholder="Message" className="min-h-[120px] bg-white border-slate-300 text-black" required />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <Button className="rounded-2xl w-full bg-indigo-600 text-white hover:bg-indigo-700">Send</Button>
-                  </div>
-                  <p className="sm:col-span-2 text-xs text-black">
-                    Or email me directly at{" "}
-                    <a className="underline text-black" href={`mailto:${PROFILE.email}`}>
-                      {PROFILE.email}
-                    </a>
-                    .
-                  </p>
-                </form>
-              </CardContent>
-            </LightCard>
+{/* Contact — forced light card */}
+<section id="contact" className="scroll-mt-24 py-14 sm:py-20">
+  <div className="max-w-6xl mx-auto px-4">
+    <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-slate-100">Contact</h2>
+    <LightCard>
+      <CardHeader>
+        <CardTitle className="text-black">Let’s work together</CardTitle>
+        <CardDescription className="text-black/70">
+          Send a note and I’ll get back within 1–2 business days.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form
+          className="grid sm:grid-cols-2 gap-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            alert("Thanks! This demo form is client-side only — wire it to your email/API.");
+          }}
+        >
+          <Input
+            placeholder="Your name"
+            required
+            className="bg-white border-slate-300 text-black"
+          />
+          <Input
+            type="email"
+            placeholder="Your email"
+            required
+            className="bg-white border-slate-300 text-black"
+          />
+          <div className="sm:col-span-2">
+            <Input
+              placeholder="Subject"
+              required
+              className="bg-white border-slate-300 text-black"
+            />
           </div>
-        </section>
+          <div className="sm:col-span-2">
+            <Textarea
+              placeholder="Message"
+              className="min-h-[120px] bg-white border-slate-300 text-black"
+              required
+            />
+          </div>
+
+          {/* Native button = reliable in Safari/macOS & iOS */}
+          <button
+            type="submit"
+            className="sm:col-span-2 rounded-2xl w-full h-11 md:h-12 bg-indigo-600 text-white font-medium
+                       hover:bg-indigo-700 active:translate-y-[1px] transition
+                       focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
+                       focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            aria-label="Send message"
+          >
+            Send
+          </button>
+
+          <p className="sm:col-span-2 text-xs text-black">
+            Or email me directly at{" "}
+            <a className="underline text-black" href={`mailto:${PROFILE.email}`}>
+              {PROFILE.email}
+            </a>
+            .
+          </p>
+        </form>
+      </CardContent>
+    </LightCard>
+  </div>
+</section>
 
         {/* Footer */}
         <footer className="py-10 border-t border-slate-800">
