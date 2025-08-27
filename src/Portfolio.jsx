@@ -168,9 +168,7 @@ const CATEGORIES = [
    Tag chip — light style for white cards
 ========================= */
 const Tag = ({ label }) => (
-  <Badge className="rounded-full bg-slate-100 border border-slate-300 text-black">
-    {label}
-  </Badge>
+  <Badge className="rounded-full bg-slate-100 border border-slate-300 text-black">{label}</Badge>
 );
 
 /* =========================
@@ -241,28 +239,24 @@ export default function Portfolio() {
 
         {/* Navbar */}
         <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-slate-900/70 border-b border-slate-800">
-          <nav className="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            {/* Row 1: name + mobile resume */}
-            <div className="flex items-center justify-between">
-              <a href="#home" className="font-semibold tracking-tight text-indigo-300">
-                {PROFILE.name}
-              </a>
-              {/* show Resume on mobile too */}
-              <a href={PROFILE.socials.resume} className="sm:hidden">
-                <Button className="rounded-2xl bg-slate-800 text-slate-100 border border-slate-700 hover:bg-slate-700 h-8 px-3 text-xs">
-                  <FileDown className="h-3.5 w-3.5 mr-1" /> Resume
-                </Button>
-              </a>
-            </div>
+          <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-3">
+            <a href="#home" className="font-semibold tracking-tight text-indigo-300 shrink-0">
+              {PROFILE.name}
+            </a>
 
-            {/* Row 2: links (scrollable on mobile) */}
-            <div className="flex items-center gap-6 text-sm overflow-x-auto whitespace-nowrap">
+            {/* Links: visible on ALL screens + horizontally scrollable on mobile */}
+            <div
+              className="flex items-center gap-6 text-sm overflow-x-auto grow
+                         [-ms-overflow-style:none] [scrollbar-width:none]
+                         [&::-webkit-scrollbar]:hidden"
+              aria-label="Primary"
+            >
               {sections.map((id) => (
                 <a
                   key={id}
                   href={`#${id}`}
                   className={
-                    "hover:opacity-90 " +
+                    "whitespace-nowrap hover:opacity-90 " +
                     (active === id ? "text-indigo-300" : "text-slate-300")
                   }
                 >
@@ -271,18 +265,16 @@ export default function Portfolio() {
               ))}
             </div>
 
-            {/* Desktop resume button */}
-            <div className="hidden sm:flex items-center gap-2">
-              <a href={PROFILE.socials.resume}>
-                <Button className="rounded-2xl bg-slate-800 text-slate-100 border border-slate-700 hover:bg-slate-700">
-                  <FileDown className="h-4 w-4 mr-2" /> Resume
-                </Button>
-              </a>
-            </div>
+            {/* Resume: keep visible on mobile too */}
+            <a href={PROFILE.socials.resume} className="shrink-0">
+              <Button className="rounded-2xl bg-slate-100 text-slate-900 border border-slate-300 hover:bg-white">
+                <FileDown className="h-4 w-4 mr-2" /> Resume
+              </Button>
+            </a>
           </nav>
         </header>
 
-        {/* Hero (single column) */}
+        {/* Hero */}
         <section id="home" className="scroll-mt-24 py-16 sm:py-24">
           <div className="max-w-6xl mx-auto px-4">
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
@@ -415,14 +407,14 @@ export default function Portfolio() {
           <div className="max-w-6xl mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-semibold text-slate-100 mb-4">Projects</h2>
 
-            {/* filter bar (sticky only on md+) */}
-            <div className="md:sticky md:top-16 z-30 mb-6">
-              <div className="backdrop-blur supports-[backdrop-filter]:bg-slate-900/70 border border-slate-800 rounded-xl p-3 overflow-x-auto">
+            {/* sticky filter bar (dark) — extra offset on small screens to avoid overlap */}
+            <div className="sticky top-24 sm:top-20 md:top-16 z-30 mb-6">
+              <div className="backdrop-blur-md supports-[backdrop-filter]:bg-slate-900/80 border border-slate-700/80 rounded-xl p-3 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 <div className="flex items-center gap-2 flex-nowrap">
                   {CATEGORIES.map((c) => (
                     <Button
                       key={c}
-                      className={`rounded-2xl text-xs sm:text-sm ${
+                      className={`rounded-2xl text-sm ${
                         cat === c
                           ? "bg-indigo-600 text-white border border-indigo-600"
                           : "bg-slate-900 text-slate-200 border border-slate-700 hover:bg-slate-800"
@@ -430,7 +422,7 @@ export default function Portfolio() {
                       onClick={() => setCat(c)}
                     >
                       <Filter className="h-3.5 w-3.5 mr-1" />
-                      <span>{c}</span>
+                      <span className="whitespace-nowrap">{c}</span>
                     </Button>
                   ))}
                 </div>
@@ -521,10 +513,7 @@ export default function Portfolio() {
               </CardHeader>
               <CardContent className="flex flex-wrap gap-2">
                 {["Causal inference", "Experiment design", "Forecasting", "Cohort analysis", "Segmentation"].map((s) => (
-                  <Badge
-                    key={s}
-                    className="rounded-full bg-slate-900 border border-slate-700 text-slate-100"
-                  >
+                  <Badge key={s} className="rounded-full bg-slate-900 border border-slate-700 text-slate-100">
                     {s}
                   </Badge>
                 ))}
@@ -533,7 +522,7 @@ export default function Portfolio() {
           </div>
         </section>
 
-        {/* Contact — LIGHT CARD / BLACK TEXT (email line black) */}
+        {/* Contact — LIGHT CARD / BLACK TEXT */}
         <section id="contact" className="scroll-mt-24 py-14 sm:py-20">
           <div className="max-w-6xl mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-slate-100">Contact</h2>
