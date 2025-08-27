@@ -326,9 +326,9 @@ export default function Portfolio() {
 
         {/* About */}
         <section id="about" className="scroll-mt-24 py-14 sm:py-20">
-          <div className="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-8 items-stretch">
+          <div className="max-w-6xl mx-auto px-4 grid lg:grid-cols-2 gap-8 items-stretch">
             <div>
-              <h2 className="text-2xl sm:text-3xl font-semibold mb-3 text-slate-100">About</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold mb-3 text-slate-100">About</h2>
               <p className="text-slate-300">
                 Fully committed to life-long learning and pragmatic analytics. I love building reliable data pipelines,
                 readable SQL, and no-nonsense dashboards that answer business questions. When I’m not at my desk,
@@ -360,7 +360,7 @@ export default function Portfolio() {
         {/* Experience — LIGHT CARDS / BLACK TEXT */}
         <section id="experience" className="scroll-mt-24 py-14 sm:py-20">
           <div className="max-w-6xl mx-auto px-4 space-y-6">
-            <h2 className="text-2xl sm:text-3xl font-semibold text-slate-100">Experience</h2>
+            <h2 className="text-2xl md:text-3xl font-semibold text-slate-100">Experience</h2>
 
             <Card className="border border-slate-200 bg-white text-black">
               <CardHeader>
@@ -400,7 +400,7 @@ export default function Portfolio() {
         {/* Projects — LIGHT CARDS / BLACK TEXT */}
         <section id="projects" className="scroll-mt-24 py-14 sm:py-20">
           <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-2xl sm:text-3xl font-semibold text-slate-100 mb-4">Projects</h2>
+            <h2 className="text-2xl md:text-3xl font-semibold text-slate-100 mb-4">Projects</h2>
 
             {/* sticky filter bar (dark) */}
             <div className="sticky top-16 z-30 mb-6">
@@ -480,7 +480,7 @@ export default function Portfolio() {
 
         {/* Skills (kept dark chips) */}
         <section id="skills" className="scroll-mt-24 py-14 sm:py-20">
-          <div className="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-6">
+          <div className="max-w-6xl mx-auto px-4 grid lg:grid-cols-2 gap-6">
             <Card className="border border-slate-800 bg-slate-900/80">
               <CardHeader>
                 <CardTitle className="text-slate-100">Core stack</CardTitle>
@@ -525,7 +525,7 @@ export default function Portfolio() {
         {/* Contact — LIGHT CARD / BLACK TEXT (email line black) */}
         <section id="contact" className="scroll-mt-24 py-14 sm:py-20">
           <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-2xl sm:text-3xl font-semibold mb-6 text-slate-100">Contact</h2>
+            <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-slate-100">Contact</h2>
             <Card className="border border-slate-200 bg-white text-black">
               <CardHeader>
                 <CardTitle className="text-black">Let’s work together</CardTitle>
