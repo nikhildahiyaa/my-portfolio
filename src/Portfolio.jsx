@@ -2,7 +2,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./components/ui/card";
+// We only keep the subparts; we won't use the Card shell itself
+import { CardContent, CardDescription, CardHeader, CardTitle } from "./components/ui/card";
 import { Badge } from "./components/ui/badge";
 import { Input } from "./components/ui/input";
 import { Textarea } from "./components/ui/textarea";
@@ -14,8 +15,6 @@ import {
   ArrowRight,
   ChevronDown,
   Filter,
-  Menu,
-  X,
 } from "lucide-react";
 
 /* =========================
@@ -31,7 +30,8 @@ const PROFILE = {
   socials: {
     github: "https://github.com/nikhildahiyaa",
     linkedin: "https://www.linkedin.com/in/nikhil-dahiya/",
-    resume: "/Nikhil Dahiya Resume.pdf", // put this PDF in /public
+    // Tip: avoid spaces in filenames; if you keep the space, encode it as %20
+    resume: "/Nikhil%20Dahiya%20Resume.pdf",
   },
 };
 
@@ -167,17 +167,26 @@ const CATEGORIES = [
 ];
 
 /* =========================
-   Tag chip — light style for white cards
+   Small helpers
 ========================= */
-const Tag = ({ label }) => (
-  <Badge className="rounded-full bg-slate-100 border border-slate-300 text-black">
-    {label}
-  </Badge>
+
+// Force-light card that doesn't rely on theme variables.
+// This guarantees a white card on every device.
+const LightCard = ({ className = "", children }) => (
+  <div className={`rounded-2xl border border-slate-200 bg-white text-black shadow-sm ${className}`}>
+    {children}
+  </div>
 );
 
-/* =========================
-   Scroll spy
-========================= */
+// Dark card used for the Skills section
+const DarkCard = ({ className = "", children }) => (
+  <div className={`rounded-2xl border border-slate-800 bg-slate-900/80 ${className}`}>{children}</div>
+);
+
+const Tag = ({ label }) => (
+  <Badge className="rounded-full bg-slate-100 border border-slate-300 text-black">{label}</Badge>
+);
+
 const useScrollSpy = (ids) => {
   const [active, setActive] = useState(ids[0]);
   useEffect(() => {
@@ -213,7 +222,6 @@ const Anchor = ({ href, children }) => (
 export default function Portfolio() {
   const [cat, setCat] = useState("All");
   const [wordIndex, setWordIndex] = useState(0);
-  const [mobileOpen, setMobileOpen] = useState(false);
   const sections = ["home", "about", "experience", "projects", "skills", "contact"];
   const active = useScrollSpy(sections);
 
@@ -236,83 +244,39 @@ export default function Portfolio() {
   return (
     <div>
       {/* Dark chrome */}
-      <div className="relative min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100">
+      <div className="relative min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100 antialiased selection:bg-indigo-600/30 selection:text-white">
         {/* decorative bloom */}
         <div className="pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(40%_40%_at_50%_15%,black,transparent_70%)]">
           <div className="absolute -top-40 left-1/2 -translate-x-1/2 h-96 w-[60rem] rounded-full bg-gradient-to-r from-fuchsia-600/20 via-cyan-500/20 to-indigo-600/20 blur-3xl" />
         </div>
 
         {/* Navbar */}
-        <header className="relative sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-slate-900/70 border-b border-slate-800">
+        <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-slate-900/70 border-b border-slate-800">
           <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
             <a href="#home" className="font-semibold tracking-tight text-indigo-300">
               {PROFILE.name}
             </a>
-
-            {/* Desktop links */}
             <div className="hidden sm:flex items-center gap-6 text-sm">
               {sections.map((id) => (
                 <a
                   key={id}
                   href={`#${id}`}
                   className={
-                    "hover:opacity-90 " +
-                    (active === id ? "text-indigo-300" : "text-slate-300")
+                    "hover:opacity-90 " + (active === id ? "text-indigo-300" : "text-slate-300")
                   }
                 >
                   {id.charAt(0).toUpperCase() + id.slice(1)}
                 </a>
               ))}
             </div>
-
             <div className="flex items-center gap-2">
               <a href={PROFILE.socials.resume} className="hidden sm:inline-block">
                 <Button className="rounded-2xl bg-slate-800 text-slate-100 border border-slate-700 hover:bg-slate-700">
                   <FileDown className="h-4 w-4 mr-2" /> Resume
                 </Button>
               </a>
-
-              {/* Mobile menu button */}
-              <button
-                className="sm:hidden inline-flex items-center justify-center rounded-xl p-2 border border-slate-700 bg-slate-800 text-slate-100"
-                aria-label="Toggle menu"
-                onClick={() => setMobileOpen((v) => !v)}
-              >
-                {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-              </button>
             </div>
           </nav>
-
-          {/* Mobile dropdown */}
-          <AnimatePresence>
-            {mobileOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.15 }}
-                className="sm:hidden absolute left-0 right-0 top-full bg-slate-900/95 border-b border-slate-800"
-              >
-                <div className="max-w-6xl mx-auto px-4 py-3 grid gap-2">
-                  {sections.map((id) => (
-                    <a
-                      key={id}
-                      href={`#${id}`}
-                      className="py-2 text-slate-200"
-                      onClick={() => setMobileOpen(false)}
-                    >
-                      {id.charAt(0).toUpperCase() + id.slice(1)}
-                    </a>
-                  ))}
-                  <a href={PROFILE.socials.resume} className="pt-2" onClick={() => setMobileOpen(false)}>
-                    <Button className="w-full rounded-2xl bg-slate-800 text-slate-100 border border-slate-700 hover:bg-slate-700">
-                      <FileDown className="h-4 w-4 mr-2" /> Resume
-                    </Button>
-                  </a>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </header>
 
         {/* Hero */}
@@ -382,8 +346,8 @@ export default function Portfolio() {
               </p>
             </div>
 
-            {/* Education — LIGHT CARD / BLACK TEXT */}
-            <Card className="border border-slate-200 bg-white text-black">
+            {/* Education — forced light card */}
+            <LightCard>
               <CardHeader>
                 <CardTitle className="text-black">Education</CardTitle>
                 <CardDescription className="text-black/70">Formal training</CardDescription>
@@ -399,16 +363,16 @@ export default function Portfolio() {
                   </ul>
                 </div>
               </CardContent>
-            </Card>
+            </LightCard>
           </div>
         </section>
 
-        {/* Experience — LIGHT CARDS / BLACK TEXT */}
+        {/* Experience — forced light cards */}
         <section id="experience" className="scroll-mt-24 py-14 sm:py-20">
           <div className="max-w-6xl mx-auto px-4 space-y-6">
             <h2 className="text-2xl md:text-3xl font-semibold text-slate-100">Experience</h2>
 
-            <Card className="border border-slate-200 bg-white text-black">
+            <LightCard>
               <CardHeader>
                 <CardTitle className="text-black">Research Assistant — Beedie School of Business (SFU)</CardTitle>
                 <CardDescription className="text-black/70">Sept 2024 – Dec 2024 • Burnaby, BC</CardDescription>
@@ -417,9 +381,9 @@ export default function Portfolio() {
                 <p>Consolidated 23,700+ ratings, 62,700+ ad records, and box office data with Python ETL.</p>
                 <p>Time-series & lag regressions; early-week ads showed ~15% stronger weekend impact.</p>
               </CardContent>
-            </Card>
+            </LightCard>
 
-            <Card className="border border-slate-200 bg-white text-black">
+            <LightCard>
               <CardHeader>
                 <CardTitle className="text-black">Data Analyst — UBC Centre for Heart Lung Innovation</CardTitle>
                 <CardDescription className="text-black/70">Sept 2023 – Apr 2024 • Vancouver, BC</CardDescription>
@@ -428,9 +392,9 @@ export default function Portfolio() {
                 <p>Analyzed national cohort (5,176 participants) with SAS/STATA; logistic regressions & meta-analysis.</p>
                 <p>Found asbestos exposure associated with chronic cough (OR≈1.8, p&lt;0.01); consistent effects across 7/9 sites.</p>
               </CardContent>
-            </Card>
+            </LightCard>
 
-            <Card className="border border-slate-200 bg-white text-black">
+            <LightCard>
               <CardHeader>
                 <CardTitle className="text-black">AI/ML Intern — Ernst &amp; Young</CardTitle>
                 <CardDescription className="text-black/70">May 2022 – Aug 2022 • Gurugram, India</CardDescription>
@@ -439,21 +403,20 @@ export default function Portfolio() {
                 <p>Built OpenCV + EasyOCR redaction tool (regex-enhanced); ~95% ID detection accuracy.</p>
                 <p>Interactive GUI; reduced processing time by ~40% and improved privacy compliance.</p>
               </CardContent>
-            </Card>
+            </LightCard>
           </div>
         </section>
 
-        {/* Projects — LIGHT CARDS / BLACK TEXT */}
+        {/* Projects — forced light cards */}
         <section id="projects" className="scroll-mt-24 py-14 sm:py-20">
           <div className="max-w-6xl mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-semibold text-slate-100 mb-4">Projects</h2>
 
-            {/* sticky filter bar (now includes section label on mobile) */}
+            {/* sticky filter bar (dark) */}
             <div className="sticky top-16 z-30 mb-6">
               <div className="backdrop-blur supports-[backdrop-filter]:bg-slate-900/70 border border-slate-800 rounded-xl p-3 overflow-x-auto">
-                <div className="flex items-center gap-3 flex-wrap">
-                  <span className="sm:hidden text-slate-200 font-medium px-1">Projects</span>
-                  <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <div className="hidden sm:flex items-center gap-2">
                     {CATEGORIES.map((c) => (
                       <Button
                         key={c}
@@ -484,7 +447,7 @@ export default function Portfolio() {
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <Card className="overflow-hidden hover:shadow-md transition-shadow border border-slate-200 bg-white text-black">
+                    <LightCard className="overflow-hidden hover:shadow-md transition-shadow">
                       <div className="relative h-40 bg-slate-200">
                         <img
                           src={p.cover}
@@ -517,7 +480,7 @@ export default function Portfolio() {
                           {p.links.report !== "#" && <Anchor href={p.links.report}>Report</Anchor>}
                         </div>
                       </CardContent>
-                    </Card>
+                    </LightCard>
                   </motion.div>
                 ))}
               </AnimatePresence>
@@ -525,10 +488,10 @@ export default function Portfolio() {
           </div>
         </section>
 
-        {/* Skills (kept dark chips) */}
+        {/* Skills (dark chips) */}
         <section id="skills" className="scroll-mt-24 py-14 sm:py-20">
           <div className="max-w-6xl mx-auto px-4 grid lg:grid-cols-2 gap-6">
-            <Card className="border border-slate-800 bg-slate-900/80">
+            <DarkCard>
               <CardHeader>
                 <CardTitle className="text-slate-100">Core stack</CardTitle>
                 <CardDescription className="text-slate-400">Daily drivers & comfort tools</CardDescription>
@@ -548,9 +511,9 @@ export default function Portfolio() {
                   </Badge>
                 ))}
               </CardContent>
-            </Card>
+            </DarkCard>
 
-            <Card className="border border-slate-800 bg-slate-900/80">
+            <DarkCard>
               <CardHeader>
                 <CardTitle className="text-slate-100">What I enjoy</CardTitle>
                 <CardDescription className="text-slate-400">Problems I reach for first</CardDescription>
@@ -565,15 +528,15 @@ export default function Portfolio() {
                   </Badge>
                 ))}
               </CardContent>
-            </Card>
+            </DarkCard>
           </div>
         </section>
 
-        {/* Contact — LIGHT CARD / BLACK TEXT (email line black) */}
+        {/* Contact — forced light card */}
         <section id="contact" className="scroll-mt-24 py-14 sm:py-20">
           <div className="max-w-6xl mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-slate-100">Contact</h2>
-            <Card className="border border-slate-200 bg-white text-black">
+            <LightCard>
               <CardHeader>
                 <CardTitle className="text-black">Let’s work together</CardTitle>
                 <CardDescription className="text-black/70">
@@ -608,7 +571,7 @@ export default function Portfolio() {
                   </p>
                 </form>
               </CardContent>
-            </Card>
+            </LightCard>
           </div>
         </section>
 
