@@ -128,7 +128,7 @@ const ALL_PROJECTS = [
     title: "Traveling Salesperson Problem (TSP) Solver",
     summary: "Heuristics for TSP; compares tour quality vs compute time.",
     details: "Nearest neighbor, 2-opt; plotted routes and trade-offs.",
-    tags: ["Optimization", "Algorithms", "Python"],
+    tags: ["Optimization", "Algorithms", "C++"],
     links: { code: "https://github.com/nikhildahiyaa/Traveling-Salesperson-Problem-TSP-Solver", demo: "#", report: "#" },
     cover:
       "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&w=1200&q=60",
@@ -137,7 +137,7 @@ const ALL_PROJECTS = [
     title: "Fifteen Puzzle Solver",
     summary: "Classic state-space search with heuristics (A*/IDA*).",
     details: "Manhattan heuristics; branching/memory analysis.",
-    tags: ["Algorithms", "Search", "Python"],
+    tags: ["Algorithms", "Search", "Java"],
     links: { code: "https://github.com/nikhildahiyaa/Fifteen-Puzzle-Solver", demo: "#", report: "#" },
     cover:
       "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1200&q=60",
