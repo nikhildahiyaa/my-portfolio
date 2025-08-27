@@ -250,34 +250,41 @@ export default function Portfolio() {
           <div className="absolute -top-40 left-1/2 -translate-x-1/2 h-96 w-[60rem] rounded-full bg-gradient-to-r from-fuchsia-600/20 via-cyan-500/20 to-indigo-600/20 blur-3xl" />
         </div>
 
-        {/* Navbar */}
-        <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-slate-900/70 border-b border-slate-800">
-          <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-            <a href="#home" className="font-semibold tracking-tight text-indigo-300">
-              {PROFILE.name}
-            </a>
-            <div className="hidden sm:flex items-center gap-6 text-sm">
-              {sections.map((id) => (
-                <a
-                  key={id}
-                  href={`#${id}`}
-                  className={
-                    "hover:opacity-90 " + (active === id ? "text-indigo-300" : "text-slate-300")
-                  }
-                >
-                  {id.charAt(0).toUpperCase() + id.slice(1)}
-                </a>
-              ))}
-            </div>
-            <div className="flex items-center gap-2">
-              <a href={PROFILE.socials.resume} className="hidden sm:inline-block">
-                <Button className="rounded-2xl bg-slate-800 text-slate-100 border border-slate-700 hover:bg-slate-700">
-                  <FileDown className="h-4 w-4 mr-2" /> Resume
-                </Button>
-              </a>
-            </div>
-          </nav>
-        </header>
+{/* Navbar */}
+<header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-slate-900/70 border-b border-slate-800">
+  <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+    {/* Brand */}
+    <a href="#home" className="font-semibold tracking-tight text-indigo-300 shrink-0">
+      {PROFILE.name}
+    </a>
+
+    {/* Section links — visible on mobile, horizontally scrollable */}
+    <div className="flex items-center gap-5 text-sm overflow-x-auto md:overflow-visible py-1 -mx-2 px-2 grow">
+      {sections.map((id) => (
+        <a
+          key={id}
+          href={`#${id}`}
+          className={
+            "whitespace-nowrap hover:opacity-90 " +
+            (active === id ? "text-indigo-300" : "text-slate-300")
+          }
+        >
+          {id.charAt(0).toUpperCase() + id.slice(1)}
+        </a>
+      ))}
+    </div>
+
+    {/* Resume button — always visible; text hides on xs */}
+    <div className="shrink-0">
+      <a href={PROFILE.socials.resume} className="inline-block">
+        <Button className="rounded-2xl bg-slate-800 text-slate-100 border border-slate-700 hover:bg-slate-700 px-3 sm:px-4">
+          <FileDown className="h-4 w-4 mr-0 sm:mr-2" />
+          <span className="hidden sm:inline">Resume</span>
+        </Button>
+      </a>
+    </div>
+  </nav>
+</header>
 
         {/* Hero */}
         <section id="home" className="scroll-mt-24 py-16 sm:py-24">
