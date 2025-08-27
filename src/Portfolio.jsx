@@ -385,7 +385,7 @@ export default function Portfolio() {
                 <CardDescription className="text-black/70">Sept 2024 – Dec 2024 • Burnaby, BC</CardDescription>
               </CardHeader>
               <CardContent className="space-y-2 text-black text-sm">
-                <p>Consolidated 23,700+ ratings, 62,700+ ad records, and box office data with Python ETL.</p>
+                <p>Consolidated 1M+ ratings, ad records, and box office data with Python ETL.</p>
                 <p>Time-series & lag regressions; early-week ads showed ~15% stronger weekend impact.</p>
               </CardContent>
             </LightCard>
