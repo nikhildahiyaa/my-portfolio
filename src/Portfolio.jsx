@@ -577,13 +577,15 @@ export default function Portfolio() {
             />
           </div>
 
-          {/* Native button = reliable in Safari/macOS & iOS */}
+          {/* Fixed: remove Safari's native gradient/appearance */}
           <button
             type="submit"
-            className="sm:col-span-2 rounded-2xl w-full h-11 md:h-12 bg-indigo-600 text-white font-medium
+            className="sm:col-span-2 rounded-2xl w-full h-11 md:h-12
+                       bg-indigo-600 text-white font-medium
                        hover:bg-indigo-700 active:translate-y-[1px] transition
                        focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
-                       focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                       focus-visible:ring-offset-2 focus-visible:ring-offset-white
+                       appearance-none [-webkit-appearance:none]"
             aria-label="Send message"
           >
             Send
@@ -601,6 +603,7 @@ export default function Portfolio() {
     </LightCard>
   </div>
 </section>
+
 
         {/* Footer */}
         <footer className="py-10 border-t border-slate-800">
