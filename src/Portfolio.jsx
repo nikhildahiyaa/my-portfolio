@@ -14,6 +14,8 @@ import {
   ArrowRight,
   ChevronDown,
   Filter,
+  Menu,
+  X,
 } from "lucide-react";
 
 /* =========================
@@ -29,7 +31,7 @@ const PROFILE = {
   socials: {
     github: "https://github.com/nikhildahiyaa",
     linkedin: "https://www.linkedin.com/in/nikhil-dahiya/",
-    resume: "/Nikhil Dahiya Resume.pdf",
+    resume: "/Nikhil Dahiya Resume.pdf", // put this PDF in /public
   },
 };
 
@@ -168,7 +170,9 @@ const CATEGORIES = [
    Tag chip — light style for white cards
 ========================= */
 const Tag = ({ label }) => (
-  <Badge className="rounded-full bg-slate-100 border border-slate-300 text-black">{label}</Badge>
+  <Badge className="rounded-full bg-slate-100 border border-slate-300 text-black">
+    {label}
+  </Badge>
 );
 
 /* =========================
@@ -209,6 +213,7 @@ const Anchor = ({ href, children }) => (
 export default function Portfolio() {
   const [cat, setCat] = useState("All");
   const [wordIndex, setWordIndex] = useState(0);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const sections = ["home", "about", "experience", "projects", "skills", "contact"];
   const active = useScrollSpy(sections);
 
@@ -238,25 +243,20 @@ export default function Portfolio() {
         </div>
 
         {/* Navbar */}
-        <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-slate-900/70 border-b border-slate-800">
-          <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-3">
-            <a href="#home" className="font-semibold tracking-tight text-indigo-300 shrink-0">
+        <header className="relative sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-slate-900/70 border-b border-slate-800">
+          <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <a href="#home" className="font-semibold tracking-tight text-indigo-300">
               {PROFILE.name}
             </a>
 
-            {/* Links: visible on ALL screens + horizontally scrollable on mobile */}
-            <div
-              className="flex items-center gap-6 text-sm overflow-x-auto grow
-                         [-ms-overflow-style:none] [scrollbar-width:none]
-                         [&::-webkit-scrollbar]:hidden"
-              aria-label="Primary"
-            >
+            {/* Desktop links */}
+            <div className="hidden sm:flex items-center gap-6 text-sm">
               {sections.map((id) => (
                 <a
                   key={id}
                   href={`#${id}`}
                   className={
-                    "whitespace-nowrap hover:opacity-90 " +
+                    "hover:opacity-90 " +
                     (active === id ? "text-indigo-300" : "text-slate-300")
                   }
                 >
@@ -265,13 +265,54 @@ export default function Portfolio() {
               ))}
             </div>
 
-            {/* Resume: keep visible on mobile too */}
-            <a href={PROFILE.socials.resume} className="shrink-0">
-              <Button className="rounded-2xl bg-slate-100 text-slate-900 border border-slate-300 hover:bg-white">
-                <FileDown className="h-4 w-4 mr-2" /> Resume
-              </Button>
-            </a>
+            <div className="flex items-center gap-2">
+              <a href={PROFILE.socials.resume} className="hidden sm:inline-block">
+                <Button className="rounded-2xl bg-slate-800 text-slate-100 border border-slate-700 hover:bg-slate-700">
+                  <FileDown className="h-4 w-4 mr-2" /> Resume
+                </Button>
+              </a>
+
+              {/* Mobile menu button */}
+              <button
+                className="sm:hidden inline-flex items-center justify-center rounded-xl p-2 border border-slate-700 bg-slate-800 text-slate-100"
+                aria-label="Toggle menu"
+                onClick={() => setMobileOpen((v) => !v)}
+              >
+                {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
+            </div>
           </nav>
+
+          {/* Mobile dropdown */}
+          <AnimatePresence>
+            {mobileOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.15 }}
+                className="sm:hidden absolute left-0 right-0 top-full bg-slate-900/95 border-b border-slate-800"
+              >
+                <div className="max-w-6xl mx-auto px-4 py-3 grid gap-2">
+                  {sections.map((id) => (
+                    <a
+                      key={id}
+                      href={`#${id}`}
+                      className="py-2 text-slate-200"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      {id.charAt(0).toUpperCase() + id.slice(1)}
+                    </a>
+                  ))}
+                  <a href={PROFILE.socials.resume} className="pt-2" onClick={() => setMobileOpen(false)}>
+                    <Button className="w-full rounded-2xl bg-slate-800 text-slate-100 border border-slate-700 hover:bg-slate-700">
+                      <FileDown className="h-4 w-4 mr-2" /> Resume
+                    </Button>
+                  </a>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </header>
 
         {/* Hero */}
@@ -407,24 +448,27 @@ export default function Portfolio() {
           <div className="max-w-6xl mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-semibold text-slate-100 mb-4">Projects</h2>
 
-            {/* sticky filter bar (dark) — extra offset on small screens to avoid overlap */}
-            <div className="sticky top-24 sm:top-20 md:top-16 z-30 mb-6">
-              <div className="backdrop-blur-md supports-[backdrop-filter]:bg-slate-900/80 border border-slate-700/80 rounded-xl p-3 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                <div className="flex items-center gap-2 flex-nowrap">
-                  {CATEGORIES.map((c) => (
-                    <Button
-                      key={c}
-                      className={`rounded-2xl text-sm ${
-                        cat === c
-                          ? "bg-indigo-600 text-white border border-indigo-600"
-                          : "bg-slate-900 text-slate-200 border border-slate-700 hover:bg-slate-800"
-                      }`}
-                      onClick={() => setCat(c)}
-                    >
-                      <Filter className="h-3.5 w-3.5 mr-1" />
-                      <span className="whitespace-nowrap">{c}</span>
-                    </Button>
-                  ))}
+            {/* sticky filter bar (now includes section label on mobile) */}
+            <div className="sticky top-16 z-30 mb-6">
+              <div className="backdrop-blur supports-[backdrop-filter]:bg-slate-900/70 border border-slate-800 rounded-xl p-3 overflow-x-auto">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <span className="sm:hidden text-slate-200 font-medium px-1">Projects</span>
+                  <div className="flex items-center gap-2">
+                    {CATEGORIES.map((c) => (
+                      <Button
+                        key={c}
+                        className={`rounded-2xl text-sm ${
+                          cat === c
+                            ? "bg-indigo-600 text-white border border-indigo-600"
+                            : "bg-slate-900 text-slate-200 border border-slate-700 hover:bg-slate-800"
+                        }`}
+                        onClick={() => setCat(c)}
+                      >
+                        <Filter className="h-3.5 w-3.5 mr-1" />
+                        <span>{c}</span>
+                      </Button>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -513,7 +557,10 @@ export default function Portfolio() {
               </CardHeader>
               <CardContent className="flex flex-wrap gap-2">
                 {["Causal inference", "Experiment design", "Forecasting", "Cohort analysis", "Segmentation"].map((s) => (
-                  <Badge key={s} className="rounded-full bg-slate-900 border border-slate-700 text-slate-100">
+                  <Badge
+                    key={s}
+                    className="rounded-full bg-slate-900 border border-slate-700 text-slate-100"
+                  >
                     {s}
                   </Badge>
                 ))}
@@ -522,7 +569,7 @@ export default function Portfolio() {
           </div>
         </section>
 
-        {/* Contact — LIGHT CARD / BLACK TEXT */}
+        {/* Contact — LIGHT CARD / BLACK TEXT (email line black) */}
         <section id="contact" className="scroll-mt-24 py-14 sm:py-20">
           <div className="max-w-6xl mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-slate-100">Contact</h2>
