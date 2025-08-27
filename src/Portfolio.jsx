@@ -414,86 +414,123 @@ export default function Portfolio() {
           </div>
         </section>
 
-        {/* Projects — forced light cards */}
-        <section id="projects" className="scroll-mt-24 py-14 sm:py-20">
-          <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-2xl md:text-3xl font-semibold text-slate-100 mb-4">Projects</h2>
+{/* Projects — mobile-friendly filter chips */}
+<section id="projects" className="scroll-mt-24 py-14 sm:py-20">
+  <div className="max-w-6xl mx-auto px-4">
+    <h2 className="text-2xl md:text-3xl font-semibold text-slate-100 mb-4">Projects</h2>
 
-            {/* sticky filter bar (dark) */}
-            <div className="sticky top-16 z-30 mb-6">
-              <div className="backdrop-blur supports-[backdrop-filter]:bg-slate-900/70 border border-slate-800 rounded-xl p-3 overflow-x-auto">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <div className="hidden sm:flex items-center gap-2">
-                    {CATEGORIES.map((c) => (
-                      <Button
-                        key={c}
-                        className={`rounded-2xl text-sm ${
-                          cat === c
-                            ? "bg-indigo-600 text-white border border-indigo-600"
-                            : "bg-slate-900 text-slate-200 border border-slate-700 hover:bg-slate-800"
-                        }`}
-                        onClick={() => setCat(c)}
-                      >
-                        <Filter className="h-3.5 w-3.5 mr-1" />
-                        <span>{c}</span>
-                      </Button>
-                    ))}
-                  </div>
-                </div>
+    {/* Filter bar: visible on mobile, scrollable; sticky under the navbar */}
+    <div className="sticky top-16 z-30 mb-6">
+      <div className="backdrop-blur supports-[backdrop-filter]:bg-slate-900/70 border border-slate-800 rounded-xl p-2">
+        <div
+          className="flex gap-2 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          role="tablist"
+          aria-label="Project categories"
+        >
+          {CATEGORIES.map((c) => (
+            <button
+              key={c}
+              onClick={() => setCat(c)}
+              role="tab"
+              aria-selected={cat === c}
+              className={
+                "shrink-0 rounded-full px-3.5 py-1.5 text-sm border transition " +
+                (cat === c
+                  ? "bg-indigo-600 text-white border-indigo-600"
+                  : "bg-slate-900 text-slate-200 border-slate-700 hover:bg-slate-800")
+              }
+            >
+              <span className="inline-flex items-center gap-2">
+                {/* hide icon on very small screens to save space */}
+                <Filter className="h-3.5 w-3.5 hidden sm:inline" />
+                {c}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    {/* Project cards */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <AnimatePresence>
+        {filtered.map((p, i) => (
+          <motion.div
+            key={p.title}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+          >
+            <LightCard className="overflow-hidden hover:shadow-md transition-shadow">
+              <div className="relative h-40 bg-slate-200">
+                <img
+                  src={p.cover}
+                  alt={`${p.title} cover`}
+                  className="h-full w-full object-cover"
+                  loading={i < 6 ? "eager" : "lazy"}
+                  decoding="async"
+                  fetchPriority={i < 3 ? "high" : "auto"}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = FALLBACK_COVER;
+                  }}
+                />
+                <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/30 to-transparent" />
               </div>
-            </div>
-
-            {/* cards */}
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              <AnimatePresence>
-                {filtered.map((p, i) => (
-                  <motion.div
-                    key={p.title}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <LightCard className="overflow-hidden hover:shadow-md transition-shadow">
-                      <div className="relative h-40 bg-slate-200">
-                        <img
-                          src={p.cover}
-                          alt={`${p.title} cover`}
-                          className="h-full w-full object-cover"
-                          loading={i < 6 ? "eager" : "lazy"}
-                          decoding="async"
-                          fetchPriority={i < 3 ? "high" : "auto"}
-                          onError={(e) => {
-                            e.currentTarget.onerror = null;
-                            e.currentTarget.src = FALLBACK_COVER;
-                          }}
-                        />
-                        <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/30 to-transparent" />
-                      </div>
-                      <CardHeader>
-                        <CardTitle className="text-lg text-black">{p.title}</CardTitle>
-                        <CardDescription className="text-black/70">{p.summary}</CardDescription>
-                      </CardHeader>
-                      <CardContent className="space-y-3 text-black">
-                        <div className="flex flex-wrap gap-2">
-                          {p.tags.map((t) => (
-                            <Tag key={t} label={t} />
-                          ))}
-                        </div>
-                        <p className="text-sm">{p.details}</p>
-                        <div className="flex items-center gap-4 pt-2">
-                          {p.links.code !== "#" && <Anchor href={p.links.code}>Code</Anchor>}
-                          {p.links.demo !== "#" && <Anchor href={p.links.demo}>Live Demo</Anchor>}
-                          {p.links.report !== "#" && <Anchor href={p.links.report}>Report</Anchor>}
-                        </div>
-                      </CardContent>
-                    </LightCard>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
-          </div>
-        </section>
+              <CardHeader>
+                <CardTitle className="text-lg text-black">{p.title}</CardTitle>
+                <CardDescription className="text-black/70">{p.summary}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3 text-black">
+                <div className="flex flex-wrap gap-2">
+                  {p.tags.map((t) => (
+                    <Badge key={t} className="rounded-full bg-slate-100 border border-slate-300 text-black">
+                      {t}
+                    </Badge>
+                  ))}
+                </div>
+                <p className="text-sm">{p.details}</p>
+                <div className="flex items-center gap-4 pt-2">
+                  {p.links.code !== "#" && (
+                    <a
+                      href={p.links.code}
+                      className="inline-flex items-center gap-2 text-sm text-indigo-700 hover:text-indigo-800 underline-offset-4 hover:underline"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Code <ArrowRight className="h-4 w-4" />
+                    </a>
+                  )}
+                  {p.links.demo !== "#" && (
+                    <a
+                      href={p.links.demo}
+                      className="inline-flex items-center gap-2 text-sm text-indigo-700 hover:text-indigo-800 underline-offset-4 hover:underline"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Live Demo <ArrowRight className="h-4 w-4" />
+                    </a>
+                  )}
+                  {p.links.report !== "#" && (
+                    <a
+                      href={p.links.report}
+                      className="inline-flex items-center gap-2 text-sm text-indigo-700 hover:text-indigo-800 underline-offset-4 hover:underline"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Report <ArrowRight className="h-4 w-4" />
+                    </a>
+                  )}
+                </div>
+              </CardContent>
+            </LightCard>
+          </motion.div>
+        ))}
+      </AnimatePresence>
+    </div>
+  </div>
+</section>
 
         {/* Skills (dark chips) */}
         <section id="skills" className="scroll-mt-24 py-14 sm:py-20">
