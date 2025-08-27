@@ -2,34 +2,51 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <title>Nikhil Dahiya Portfolio</title>
 
-    <!-- Page title -->
-    <title>Nikhil Dahiya – Portfolio</title>
+    <!-- Consistent colors and platform chrome -->
+    <meta name="theme-color" content="#0b1220" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-    <!-- SEO -->
-    <meta name="description" content="Portfolio of Nikhil Dahiya — Data Scientist & Analyst. Forecasting, ML, BI and analytics projects." />
-    <meta name="color-scheme" content="dark light">
-    <meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <!-- Lock a single web font everywhere -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-    <!-- Open Graph (WhatsApp/Facebook/LinkedIn) -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Nikhil Dahiya – Portfolio" />
-    <meta property="og:description" content="Forecasting • ML • BI • Analytics — selected projects and contact." />
-    <meta property="og:url" content="https://nikhil-dahiya-portfolio.vercel.app/" />
-    <meta property="og:image" content="/og.png" />  <!-- put og.png in /public (1200×630) -->
+    <style>
+      :root { color-scheme: dark; }
+      html, body, #root { height: 100%; }
 
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Nikhil Dahiya – Portfolio" />
-    <meta name="twitter:description" content="Forecasting • ML • BI • Analytics — selected projects and contact." />
-    <meta name="twitter:image" content="/og.png" />
+      /* Stop iPhone Safari from auto-bumping text sizes */
+      html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
-    <script>tailwind = { config: { darkMode: 'class' } }</script>
+      /* Use the same font + smoothing on all platforms */
+      body {
+        font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
+                     "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+                     "Apple Color Emoji", "Segoe UI Emoji";
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color: #0b1220; /* matches your site’s dark bg */
+      }
+    </style>
+
+    <!-- Tailwind CDN with dark mode -->
+    <script>
+      tailwind = { config: { darkMode: 'class' } }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
+  <body class="antialiased">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

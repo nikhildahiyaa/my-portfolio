@@ -29,7 +29,7 @@ const PROFILE = {
   socials: {
     github: "https://github.com/nikhildahiyaa",
     linkedin: "https://www.linkedin.com/in/nikhil-dahiya/",
-    resume: "/Nikhil Dahiya Resume.pdf", // put resume.pdf in /public
+    resume: "/Nikhil Dahiya Resume.pdf", // put the PDF in /public
   },
 };
 
@@ -231,7 +231,7 @@ export default function Portfolio() {
   );
 
   return (
-    <div>
+    <div className="font-sans antialiased">
       {/* Dark chrome */}
       <div className="relative min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100">
         {/* decorative bloom */}
@@ -269,12 +269,12 @@ export default function Portfolio() {
           </nav>
         </header>
 
-        {/* Hero (single column; no Signature Impact) */}
+        {/* Hero */}
         <section id="home" className="scroll-mt-24 py-16 sm:py-24">
           <div className="max-w-6xl mx-auto px-4">
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
               <p className="text-sm uppercase tracking-wide text-indigo-300/80">{PROFILE.location}</p>
-              <h1 className="text-4xl sm:text-5xl font-bold mt-2 leading-tight">
+              <h1 className="text-4xl font-bold mt-2 leading-tight">
                 Hello, I'm <span className="text-indigo-300">{PROFILE.name}</span>
               </h1>
 
@@ -328,7 +328,7 @@ export default function Portfolio() {
         <section id="about" className="scroll-mt-24 py-14 sm:py-20">
           <div className="max-w-6xl mx-auto px-4 grid lg:grid-cols-2 gap-8 items-stretch">
             <div>
-              <h2 className="text-2xl md:text-3xl font-semibold mb-3 text-slate-100">About</h2>
+              <h2 className="text-2xl font-semibold mb-3 text-slate-100">About</h2>
               <p className="text-slate-300">
                 Fully committed to life-long learning and pragmatic analytics. I love building reliable data pipelines,
                 readable SQL, and no-nonsense dashboards that answer business questions. When I’m not at my desk,
@@ -360,7 +360,7 @@ export default function Portfolio() {
         {/* Experience — LIGHT CARDS / BLACK TEXT */}
         <section id="experience" className="scroll-mt-24 py-14 sm:py-20">
           <div className="max-w-6xl mx-auto px-4 space-y-6">
-            <h2 className="text-2xl md:text-3xl font-semibold text-slate-100">Experience</h2>
+            <h2 className="text-2xl font-semibold text-slate-100">Experience</h2>
 
             <Card className="border border-slate-200 bg-white text-black">
               <CardHeader>
@@ -400,7 +400,7 @@ export default function Portfolio() {
         {/* Projects — LIGHT CARDS / BLACK TEXT */}
         <section id="projects" className="scroll-mt-24 py-14 sm:py-20">
           <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-2xl md:text-3xl font-semibold text-slate-100 mb-4">Projects</h2>
+            <h2 className="text-2xl font-semibold text-slate-100 mb-4">Projects</h2>
 
             {/* sticky filter bar (dark) */}
             <div className="sticky top-16 z-30 mb-6">
@@ -522,10 +522,10 @@ export default function Portfolio() {
           </div>
         </section>
 
-        {/* Contact — LIGHT CARD / BLACK TEXT (email line black) */}
+        {/* Contact — LIGHT CARD / BLACK TEXT */}
         <section id="contact" className="scroll-mt-24 py-14 sm:py-20">
           <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-slate-100">Contact</h2>
+            <h2 className="text-2xl font-semibold mb-6 text-slate-100">Contact</h2>
             <Card className="border border-slate-200 bg-white text-black">
               <CardHeader>
                 <CardTitle className="text-black">Let’s work together</CardTitle>
