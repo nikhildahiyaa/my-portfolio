@@ -22,7 +22,14 @@ import {
 ========================= */
 const PROFILE = {
   name: "Nikhil Dahiya",
-  roleWords: ["Data Scientist", "Data Analyst", "Business Analyst", "BI Developer", "Machine Learning", "Forecasting"],
+  roleWords: [
+    "Data Scientist",
+    "Data Analyst",
+    "Business Analyst",
+    "BI Developer",
+    "Machine Learning",
+    "Forecasting",
+  ],
   location: "Vancouver, BC",
   blurb:
     "Data Analyst with experience in forecasting, A/B testing, and BI. I turn messy datasets into clear insights and operational wins.",
@@ -33,119 +40,50 @@ const PROFILE = {
     // Tip: avoid spaces in filenames; if you keep the space, encode it as %20
     resume: "/Nikhil%20Dahiya%20Resume.pdf",
   },
-   avatar: "/avatar.jpg", 
 };
-{/* Hero */}
-<section id="home" className="scroll-mt-24 py-16 sm:py-24">
-  <div className="max-w-6xl mx-auto px-4 relative">
-    {/* Avatar – desktop (top right) */}
-    <img
-      src={PROFILE.avatar}
-      alt={`${PROFILE.name} headshot`}
-      className="hidden md:block absolute right-0 top-0 w-32 h-32 rounded-full object-cover ring-1 ring-slate-700/60 shadow-lg"
-      loading="eager"
-      onError={(e) => {
-        e.currentTarget.style.display = "none";
-      }}
-    />
-
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <p className="text-sm uppercase tracking-wide text-indigo-300/80">{PROFILE.location}</p>
-      <h1 className="text-4xl sm:text-5xl font-bold mt-2 leading-tight">
-        Hello, I'm <span className="text-indigo-300">{PROFILE.name}</span>
-      </h1>
-
-      {/* rotating subtitle */}
-      <div className="h-8 mt-2">
-        <AnimatePresence mode="wait">
-          <motion.p
-            key={PROFILE.roleWords[wordIndex]}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.25 }}
-            className="text-xl text-slate-200"
-          >
-            {PROFILE.roleWords[wordIndex]}
-          </motion.p>
-        </AnimatePresence>
-      </div>
-
-      <p className="mt-4 text-slate-300 max-w-prose">{PROFILE.blurb}</p>
-
-      {/* Avatar – mobile (under text) */}
-      <img
-        src={PROFILE.avatar}
-        alt={`${PROFILE.name} headshot`}
-        className="md:hidden mt-6 w-24 h-24 rounded-full object-cover ring-1 ring-slate-700/60 shadow-md"
-        loading="eager"
-        onError={(e) => {
-          e.currentTarget.style.display = "none";
-        }}
-      />
-
-      <div className="mt-6 flex flex-wrap gap-3">
-        <a href={PROFILE.socials.github}>
-          <Button className="rounded-2xl bg-slate-800 text-slate-100 hover:bg-slate-700 border border-slate-700">
-            <Github className="mr-2 h-4 w-4" />
-            GitHub
-          </Button>
-        </a>
-        <a href={PROFILE.socials.linkedin}>
-          <Button className="rounded-2xl bg-slate-800 text-cyan-300 hover:bg-slate-700 border border-slate-700">
-            <Linkedin className="mr-2 h-4 w-4" />
-            LinkedIn
-          </Button>
-        </a>
-        <a href={`mailto:${PROFILE.email}`}>
-          <Button className="rounded-2xl bg-slate-800 text-fuchsia-300 hover:bg-slate-700 border border-slate-700">
-            <Mail className="mr-2 h-4 w-4" />
-            Email
-          </Button>
-        </a>
-      </div>
-
-      <a href="#projects" className="group mt-10 inline-flex items-center gap-2 text-indigo-300">
-        See my work <ChevronDown className="h-4 w-4 group-hover:translate-y-0.5 transition-transform" />
-      </a>
-    </motion.div>
-  </div>
-</section>
 
 const FALLBACK_COVER =
   "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=60";
 
 /* =========================
    Projects (ordered by importance)
-========================= */
+   ========================= */
+
 const ALL_PROJECTS = [
   {
     title: "BCMEA Labour Demand Forecasting",
-    summary: "Unified dock/vessel labour model; reduced error from ~40% MAPE to 7.45%.",
+    summary:
+      "Unified dock/vessel labour model; reduced error from ~40% MAPE to 7.45%.",
     details:
       "Merged 2M+ payroll, 60K+ gang allocations, 4K+ vessel logs. Holiday & vessel-cluster features, backtesting, automated reporting.",
     tags: ["Forecasting", "Python", "Time Series"],
-    links: { code: "https://github.com/nikhildahiyaa/BCMEA-Labor-Forecast", demo: "#", report: "#" },
+    links: {
+      code: "https://github.com/nikhildahiyaa/BCMEA-Labor-Forecast",
+      demo: "#",
+      report: "#",
+    },
     cover:
       "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=60",
   },
   {
     title: "Airbnb Booking Prediction",
-    summary: "213k users • 69% accuracy (AUC 0.735); desktop users 30% more likely to book.",
+    summary:
+      "213k users • 69% accuracy (AUC 0.735); desktop users 30% more likely to book.",
     details:
       "Behavioral features; logistic regression & random forest; surfaced device & seasonal drivers for marketing/UX.",
     tags: ["Classification", "Python", "Product Analytics"],
-    links: { code: "https://github.com/nikhildahiyaa/Airbnb-Booking-Prediction", demo: "#", report: "#" },
+    links: {
+      code: "https://github.com/nikhildahiyaa/Airbnb-Booking-Prediction",
+      demo: "#",
+      report: "#",
+    },
     cover:
       "https://images.unsplash.com/photo-1556761175-4b46a572b786?auto=format&fit=crop&w=1200&q=60",
   },
   {
     title: "Customer Segmentation (RFM + K-Means)",
-    summary: "21% “Best Customers” contributing 50%+ of revenue; actionable cohorts.",
+    summary:
+      "21% “Best Customers” contributing 50%+ of revenue; actionable cohorts.",
     details:
       "Cleaned 135k incomplete rows; built RFM features; K-Means clustering + visuals for targeted campaigns.",
     tags: ["Clustering", "Python", "Marketing"],
@@ -160,16 +98,22 @@ const ALL_PROJECTS = [
   {
     title: "Image Redaction Tool",
     summary: "OpenCV + EasyOCR pipeline; ~95% ID detection; ~40% faster processing.",
-    details: "Regex-enhanced OCR, redaction overlays, batch pipeline + simple GUI for compliance.",
+    details:
+      "Regex-enhanced OCR, redaction overlays, batch pipeline + simple GUI for compliance.",
     tags: ["Computer Vision", "Python", "OCR"],
-    links: { code: "https://github.com/nikhildahiyaa/Image-Redaction-Project", demo: "#", report: "#" },
+    links: {
+      code: "https://github.com/nikhildahiyaa/Image-Redaction-Project",
+      demo: "#",
+      report: "#",
+    },
     cover:
       "https://images.unsplash.com/photo-1531834685032-c34bf0d84c77?auto=format&fit=crop&w=1200&q=60",
   },
   {
     title: "Box Office Revenue Prediction",
     summary: "Linear regression baseline with feature engineering; research-grade.",
-    details: "Scraped/cleaned movie features; explored lagged ad effects; regression with diagnostics.",
+    details:
+      "Scraped/cleaned movie features; explored lagged ad effects; regression with diagnostics.",
     tags: ["Regression", "Python", "Research"],
     links: {
       code: "https://github.com/nikhildahiyaa/Box-Office-Revenue-Prediction-Using-Linear-Regression-in-ML",
@@ -182,7 +126,8 @@ const ALL_PROJECTS = [
   {
     title: "YAIP — Yet Another Image Processor",
     summary: "CLI for common image transforms; speed + DX focused.",
-    details: "OpenCV wrapper; resize, filters, format conversions with simple flags.",
+    details:
+      "OpenCV wrapper; resize, filters, format conversions with simple flags.",
     tags: ["Computer Vision", "Python", "CLI"],
     links: {
       code: "https://github.com/nikhildahiyaa/Yet-Another-Image-Processor-YAIP-",
@@ -210,7 +155,11 @@ const ALL_PROJECTS = [
     summary: "Heuristics for TSP; compares tour quality vs compute time.",
     details: "Nearest neighbor, 2-opt; plotted routes and trade-offs.",
     tags: ["Optimization", "Algorithms", "C++"],
-    links: { code: "https://github.com/nikhildahiyaa/Traveling-Salesperson-Problem-TSP-Solver", demo: "#", report: "#" },
+    links: {
+      code: "https://github.com/nikhildahiyaa/Traveling-Salesperson-Problem-TSP-Solver",
+      demo: "#",
+      report: "#",
+    },
     cover:
       "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&w=1200&q=60",
   },
@@ -219,7 +168,11 @@ const ALL_PROJECTS = [
     summary: "Classic state-space search with heuristics (A*/IDA*).",
     details: "Manhattan heuristics; branching/memory analysis.",
     tags: ["Algorithms", "Search", "Java"],
-    links: { code: "https://github.com/nikhildahiyaa/Fifteen-Puzzle-Solver", demo: "#", report: "#" },
+    links: {
+      code: "https://github.com/nikhildahiyaa/Fifteen-Puzzle-Solver",
+      demo: "#",
+      report: "#",
+    },
     cover:
       "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1200&q=60",
   },
@@ -228,7 +181,11 @@ const ALL_PROJECTS = [
     summary: "Tidyverse + rvest pipelines for clean, repeatable scrapes.",
     details: "Multi-page scraping; tidy ETL; CSV/Parquet outputs.",
     tags: ["ETL", "R", "Web Scraping"],
-    links: { code: "https://github.com/nikhildahiyaa/-Web-Scraping-with-R", demo: "#", report: "#" },
+    links: {
+      code: "https://github.com/nikhildahiyaa/-Web-Scraping-with-R",
+      demo: "#",
+      report: "#",
+    },
     cover:
       "https://images.unsplash.com/photo-1454165205744-3b78555e5572?auto=format&fit=crop&w=1200&q=60",
   },
@@ -249,40 +206,53 @@ const CATEGORIES = [
 
 /* =========================
    Small helpers
-========================= */
+   ========================= */
 
 // Force-light card that doesn't rely on theme variables.
 // This guarantees a white card on every device.
 const LightCard = ({ className = "", children }) => (
-  <div className={`rounded-2xl border border-slate-200 bg-white text-black shadow-sm ${className}`}>
+  <div
+    className={`rounded-2xl border border-slate-200 bg-white text-black shadow-sm ${className}`}
+  >
     {children}
   </div>
 );
 
 // Dark card used for the Skills section
 const DarkCard = ({ className = "", children }) => (
-  <div className={`rounded-2xl border border-slate-800 bg-slate-900/80 ${className}`}>{children}</div>
+  <div
+    className={`rounded-2xl border border-slate-800 bg-slate-900/80 ${className}`}
+  >
+    {children}
+  </div>
 );
 
 const Tag = ({ label }) => (
-  <Badge className="rounded-full bg-slate-100 border border-slate-300 text-black">{label}</Badge>
+  <Badge className="rounded-full bg-slate-100 border border-slate-300 text-black">
+    {label}
+  </Badge>
 );
 
 const useScrollSpy = (ids) => {
   const [active, setActive] = useState(ids[0]);
+
   useEffect(() => {
     const observers = ids.map((id) => {
       const el = document.getElementById(id);
       if (!el) return null;
+
       const obs = new IntersectionObserver(
         ([entry]) => entry.isIntersecting && setActive(id),
         { rootMargin: "-50% 0px -40% 0px", threshold: 0.01 }
       );
+
       obs.observe(el);
       return obs;
     });
+
     return () => observers.forEach((o) => o?.disconnect());
   }, [ids.join("|")]);
+
   return active;
 };
 
