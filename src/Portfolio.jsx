@@ -347,9 +347,15 @@ export default function Portfolio() {
             <div>
               <h2 className="text-2xl md:text-3xl font-semibold mb-3 text-slate-100">About</h2>
               <p className="text-slate-300">
-                Fully committed to life-long learning and pragmatic analytics. I love building reliable data pipelines,
-                readable SQL, and no-nonsense dashboards that answer business questions. When I’m not at my desk,
-                you’ll find me lifting, cooking, or chasing sunsets.
+Hi, I’m Nikhil Dahiya 👋
+
+I recently graduated from Simon Fraser University with a strong foundation in data science and analytics. During my studies, I made it a point to go beyond the classroom and work on real projects that challenged me to solve meaningful problems with data.
+
+Some of my favorite projects include forecasting labor demand for the BCMEA, predicting Airbnb bookings, analyzing box-office revenue trends, and even building fun tools like a Synthetic Investor persona generator. These projects reflect my curiosity, problem-solving mindset, and passion for turning data into insights.
+
+Now, I’m excited to begin my professional journey—to learn, grow, and contribute to a collaborative team. While I love working with data, I also believe that people skills matter just as much as technical skills. I value teamwork, adaptability, and open communication, and I take pride in being flexible and easy to work with.
+
+I’m open to exploring different paths in data science, analytics, and business intelligence, and I’m always eager to take on new challenges.
               </p>
             </div>
 
