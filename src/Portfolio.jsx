@@ -349,8 +349,7 @@ export default function Portfolio() {
 
   <div className="space-y-4 text-slate-300">
     <p>
-      Hi, I’m <span className="text-slate-100 font-medium">Nikhil</span> 👋 — a recent graduate from
-      Simon Fraser University with a strong academic foundation and hands-on experience in data
+      I’m 👋 — a recent graduate from Simon Fraser University with a strong academic foundation and hands-on experience in data
       science and analytics.
     </p>
 
@@ -359,12 +358,6 @@ export default function Portfolio() {
       projects. From building forecasting models for maritime labor demand to predicting Airbnb
       bookings and analyzing box-office trends, I love turning data into meaningful insights.
     </p>
-
-    <ul className="list-disc pl-5 space-y-1">
-      <li>BCMEA labour demand forecasting (reliable staffing forecasts)</li>
-      <li>Airbnb booking prediction (behavioral features & model insights)</li>
-      <li>Box-office revenue analysis (time-series & lag effects)</li>
-    </ul>
 
     <p>
       At this stage in my career, I’m excited to step into the professional world to learn, grow,
