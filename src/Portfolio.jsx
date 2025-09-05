@@ -344,20 +344,51 @@ export default function Portfolio() {
         {/* About */}
         <section id="about" className="scroll-mt-24 py-14 sm:py-20">
           <div className="max-w-6xl mx-auto px-4 grid lg:grid-cols-2 gap-8 items-stretch">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-semibold mb-3 text-slate-100">About</h2>
-              <p className="text-slate-300">
-Hi, I’m Nikhil Dahiya 👋
+<div>
+  <h2 className="text-2xl md:text-3xl font-semibold mb-3 text-slate-100">About</h2>
 
-I recently graduated from Simon Fraser University with a strong foundation in data science and analytics. During my studies, I made it a point to go beyond the classroom and work on real projects that challenged me to solve meaningful problems with data.
+  <div className="space-y-4 text-slate-300">
+    <p>
+      Hi, I’m <span className="text-slate-100 font-medium">Nikhil</span> 👋 — a recent graduate from
+      Simon Fraser University with a strong academic foundation and hands-on experience in data
+      science and analytics.
+    </p>
 
-Some of my favorite projects include forecasting labor demand for the BCMEA, predicting Airbnb bookings, analyzing box-office revenue trends, and even building fun tools like a Synthetic Investor persona generator. These projects reflect my curiosity, problem-solving mindset, and passion for turning data into insights.
+    <p>
+      Throughout my studies, I didn’t just learn concepts in the classroom — I applied them on real
+      projects. From building forecasting models for maritime labor demand to predicting Airbnb
+      bookings and analyzing box-office trends, I love turning data into meaningful insights.
+    </p>
 
-Now, I’m excited to begin my professional journey—to learn, grow, and contribute to a collaborative team. While I love working with data, I also believe that people skills matter just as much as technical skills. I value teamwork, adaptability, and open communication, and I take pride in being flexible and easy to work with.
+    <ul className="list-disc pl-5 space-y-1">
+      <li>BCMEA labour demand forecasting (reliable staffing forecasts)</li>
+      <li>Airbnb booking prediction (behavioral features & model insights)</li>
+      <li>Box-office revenue analysis (time-series & lag effects)</li>
+    </ul>
 
-I’m open to exploring different paths in data science, analytics, and business intelligence, and I’m always eager to take on new challenges.
-              </p>
-            </div>
+    <p>
+      At this stage in my career, I’m excited to step into the professional world to learn, grow,
+      and contribute to a team where collaboration and curiosity are valued. Technical skills matter,
+      but I also value teamwork, adaptability, and clear communication — I’m flexible, approachable,
+      and easy to work with.
+    </p>
+
+    <p>
+      I’m open to roles across data science, analytics, and BI where I can make an impact, learn
+      from teammates and mentors, and build thoughtful solutions. You can explore more of my work
+      in the <a href="#projects" className="underline text-indigo-300">Projects</a> section, or view this site at{" "}
+      <a
+        href="https://nikhil-dahiya-portfolio.vercel.app"
+        target="_blank"
+        rel="noreferrer"
+        className="underline text-indigo-300"
+      >
+        nikhil-dahiya-portfolio.vercel.app
+      </a>.
+    </p>
+  </div>
+</div>
+
 
             {/* Education — forced light card */}
             <LightCard>
