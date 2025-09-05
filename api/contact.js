@@ -1,44 +1,56 @@
 // api/contact.js
-import { Resend } from "resend";
+const { Resend } = require("resend");
 
-// env vars: RESEND_API_KEY, CONTACT_FROM, CONTACT_TO
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+module.exports = async (req, res) => {
+  // CORS: harmless on same-origin, useful if you test from elsewhere
+  res.setHeader("Access-Control-Allow-Origin", process.env.CORS_ALLOW_ORIGIN || "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  if (req.method === "OPTIONS") return res.status(204).end();
+
+  if (req.method !== "POST") return res.status(405).send("Method Not Allowed");
 
   try {
-    const { name = "", email = "", subject = "", message = "", company = "" } = req.body || {};
+    const { name, email, subject, message, company } = req.body || {};
 
-    // simple honeypot (bots fill hidden "company")
-    if (company) return res.status(200).json({ ok: true });
+    // simple bot trap
+    if (company) return res.status(400).send("Bot detected");
 
-    if (!name || !email || !message) {
-      return res.status(400).json({ error: "Missing required fields" });
+    if (!name || !email || !subject || !message) {
+      return res.status(400).send("Missing fields");
     }
 
-    // 1) send the message to you
+    // Use a verified Resend sender. For quick testing, 'onboarding@resend.dev' works.
+    const from = process.env.CONTACT_FROM || "onboarding@resend.dev";
+    const to = process.env.CONTACT_TO;
+
+    if (!process.env.RESEND_API_KEY) return res.status(500).send("RESEND_API_KEY missing");
+    if (!to) return res.status(500).send("CONTACT_TO missing");
+
+    // 1) Forward the message to you
     await resend.emails.send({
-      from: `Portfolio Contact <${process.env.CONTACT_FROM}>`,
-      to: [process.env.CONTACT_TO],
-      reply_to: email, // so you can hit Reply
-      subject: `[Portfolio] ${subject || "New message"}`,
+      from,
+      to,
+      reply_to: email,
+      subject: `Portfolio: ${subject}`,
       text: `From: ${name} <${email}>\n\n${message}`,
     });
 
-    // 2) confirmation to the sender
+    // 2) Send confirmation to the sender (optional)
     await resend.emails.send({
-      from: `Nikhil Dahiya <${process.env.CONTACT_FROM}>`,
-      to: [email],
-      subject: `Thanks, ${name.split(" ")[0]} — message received`,
+      from,
+      to: email,
+      subject: `Thanks for reaching out, ${name}!`,
       text:
-        `Hi ${name.split(" ")[0]},\n\nThanks for reaching out! I'll get back within 1–2 business days.\n\n` +
-        `— Summary —\nSubject: ${subject || "(none)"}\n\n${message}\n\n— Nikhil`,
+        `Hi ${name},\n\nThanks for your message. I’ll reply shortly.\n\n` +
+        `Copy of your message:\n${message}\n\n— Nikhil`,
     });
 
     res.status(200).json({ ok: true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Email failed to send" });
+    res.status(500).send(err?.message || "Error sending email");
   }
-}
+};
