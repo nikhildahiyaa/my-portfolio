@@ -30,10 +30,95 @@ const PROFILE = {
   socials: {
     github: "https://github.com/nikhildahiyaa",
     linkedin: "https://www.linkedin.com/in/nikhil-dahiya/",
-    // Tip: avoid spaces in filenames; if you keep the space, encode it as %20
     resume: "/Nikhil%20Dahiya%20Resume.pdf",
   },
+  avatar: "/nikhil.jpeg",
 };
+{/* Hero with right-side avatar */}
+<section id="home" className="scroll-mt-24 py-16 sm:py-24">
+  <div className="max-w-6xl mx-auto px-4">
+    <div className="grid md:grid-cols-[1fr_auto] items-start gap-8">
+      {/* Left: text */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="md:pr-6"
+      >
+        <p className="text-sm uppercase tracking-wide text-indigo-300/80">{PROFILE.location}</p>
+        <h1 className="text-4xl sm:text-5xl font-bold mt-2 leading-tight">
+          Hello, I'm <span className="text-indigo-300">{PROFILE.name}</span>
+        </h1>
+
+        {/* rotating subtitle (unchanged) */}
+        <div className="h-8 mt-2">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={PROFILE.roleWords[wordIndex]}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.25 }}
+              className="text-xl text-slate-200"
+            >
+              {PROFILE.roleWords[wordIndex]}
+            </motion.p>
+          </AnimatePresence>
+        </div>
+
+        <p className="mt-4 text-slate-300 max-w-prose">{PROFILE.blurb}</p>
+
+        <div className="mt-6 flex flex-wrap gap-3">
+          <a href={PROFILE.socials.github}>
+            <Button className="rounded-2xl bg-slate-800 text-slate-100 hover:bg-slate-700 border border-slate-700">
+              <Github className="mr-2 h-4 w-4" />
+              GitHub
+            </Button>
+          </a>
+          <a href={PROFILE.socials.linkedin}>
+            <Button className="rounded-2xl bg-slate-800 text-cyan-300 hover:bg-slate-700 border border-slate-700">
+              <Linkedin className="mr-2 h-4 w-4" />
+              LinkedIn
+            </Button>
+          </a>
+          <a href={`mailto:${PROFILE.email}`}>
+            <Button className="rounded-2xl bg-slate-800 text-fuchsia-300 hover:bg-slate-700 border border-slate-700">
+              <Mail className="mr-2 h-4 w-4" />
+              Email
+            </Button>
+          </a>
+        </div>
+
+        <a href="#projects" className="group mt-10 inline-flex items-center gap-2 text-indigo-300">
+          See my work <ChevronDown className="h-4 w-4 group-hover:translate-y-0.5 transition-transform" />
+        </a>
+
+        {/* Mobile avatar (right-aligned) */}
+        <div className="mt-6 flex md:hidden justify-end">
+          <img
+            src={PROFILE.avatar}
+            alt="Nikhil Dahiya headshot"
+            className="w-24 h-24 rounded-full object-cover ring-2 ring-indigo-400/40 shadow-md bg-slate-800"
+            loading="eager"
+          />
+        </div>
+      </motion.div>
+
+      {/* Right: desktop avatar */}
+      <div className="hidden md:block">
+        <div className="sticky top-24">
+          <img
+            src={PROFILE.avatar}
+            alt="Nikhil Dahiya headshot"
+            className="w-40 h-40 lg:w-48 lg:h-48 rounded-full object-cover ring-2 ring-indigo-400/40 shadow-xl bg-slate-800"
+            loading="eager"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 const FALLBACK_COVER =
   "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=60";
