@@ -291,6 +291,39 @@ export default function Portfolio() {
     () => (cat === "All" ? ALL_PROJECTS : ALL_PROJECTS.filter((p) => p.tags.includes(cat))),
     [cat]
   );
+// --- Contact form state + submit handler ---
+const [mailStatus, setMailStatus] = useState("idle"); // idle | sending | sent | error
+const [mailError, setMailError] = useState("");
+
+async function handleContactSubmit(e) {
+  e.preventDefault();
+  const form = new FormData(e.currentTarget);
+
+  setMailStatus("sending");
+  setMailError("");
+
+  try {
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: form.get("name"),
+        email: form.get("email"),
+        subject: form.get("subject"),
+        message: form.get("message"),
+        // honeypot (hidden field below). If a bot fills it, your API should reject.
+        company: form.get("company"),
+      }),
+    });
+
+    if (!res.ok) throw new Error(await res.text());
+    setMailStatus("sent");
+    e.currentTarget.reset();
+  } catch (err) {
+    setMailStatus("error");
+    setMailError("Something went wrong. Please try again or email me directly.");
+  }
+}
 
   return (
     <div>
@@ -669,19 +702,18 @@ export default function Portfolio() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form
-          className="grid sm:grid-cols-2 gap-4"
-          onSubmit={(e) => {
-            e.preventDefault();
-            alert("Thanks! This demo form is client-side only — wire it to your email/API.");
-          }}
-        >
+        <form className="grid sm:grid-cols-2 gap-4" onSubmit={handleContactSubmit}>
+          {/* Honeypot field (bots will fill this; humans won’t see it) */}
+          <input name="company" className="hidden" tabIndex={-1} autoComplete="off" />
+
           <Input
+            name="name"
             placeholder="Your name"
             required
             className="bg-white border-slate-300 text-black"
           />
           <Input
+            name="email"
             type="email"
             placeholder="Your email"
             required
@@ -689,6 +721,7 @@ export default function Portfolio() {
           />
           <div className="sm:col-span-2">
             <Input
+              name="subject"
               placeholder="Subject"
               required
               className="bg-white border-slate-300 text-black"
@@ -696,25 +729,38 @@ export default function Portfolio() {
           </div>
           <div className="sm:col-span-2">
             <Textarea
+              name="message"
               placeholder="Message"
               className="min-h-[120px] bg-white border-slate-300 text-black"
               required
             />
           </div>
 
-          {/* Fixed: remove Safari's native gradient/appearance */}
+          {/* iOS-safe button styling */}
           <button
             type="submit"
+            disabled={mailStatus === "sending"}
             className="sm:col-span-2 rounded-2xl w-full h-11 md:h-12
                        bg-indigo-600 text-white font-medium
-                       hover:bg-indigo-700 active:translate-y-[1px] transition
+                       hover:bg-indigo-700 disabled:opacity-70 disabled:cursor-not-allowed
+                       active:translate-y-[1px] transition
                        focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
                        focus-visible:ring-offset-2 focus-visible:ring-offset-white
                        appearance-none [-webkit-appearance:none]"
             aria-label="Send message"
           >
-            Send
+            {mailStatus === "sending" ? "Sending…" : "Send"}
           </button>
+
+          {/* Success / error messages */}
+          {mailStatus === "sent" && (
+            <p className="sm:col-span-2 text-sm text-emerald-700">
+              Thanks! I’ve received your message.
+            </p>
+          )}
+          {mailStatus === "error" && (
+            <p className="sm:col-span-2 text-sm text-red-600">{mailError}</p>
+          )}
 
           <p className="sm:col-span-2 text-xs text-black">
             Or email me directly at{" "}
@@ -728,7 +774,6 @@ export default function Portfolio() {
     </LightCard>
   </div>
 </section>
-
 
         {/* Footer */}
         <footer className="py-10 border-t border-slate-800">
