@@ -501,6 +501,7 @@ async function handleContactSubmit(e) {
               <CardContent className="space-y-2 text-black text-sm">
                 <p>Consolidated 1M+ ratings, ad records, and box office data with Python ETL.</p>
                 <p>Time-series & lag regressions; early-week ads showed ~15% stronger weekend impact.</p>
+                <p>Develop dashboards in Power BI, reallocating ~20% of ad spend to high-ROI period</p>
               </CardContent>
             </LightCard>
 
