@@ -30,7 +30,7 @@ const PROFILE = {
     "Machine Learning",
     "Forecasting",
   ],
-  location: "Canada",
+  /* location: "Canada",*/
   blurb:
     "Data Analyst with experience in forecasting, A/B testing, and BI. I turn messy datasets into clear insights and operational wins.",
   email: "dahiya5166@gmail.com",
