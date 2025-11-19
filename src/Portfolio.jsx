@@ -657,7 +657,7 @@ async function handleContactSubmit(e) {
               </CardHeader>
               <CardContent className="flex flex-wrap gap-2">
                 {[
-                  "Python", "R", "SQL", "Pandas", "NumPy", "SciPy", "Scikit-learn",
+                  "Python", "R", "SQL", "Power Bi", "Pandas", "NumPy", "SciPy", "Scikit-learn",
                   "XGBoost", "Random Forest", "LightGBM", "TensorFlow", "PyTorch", "Statsmodels",
                   "Prophet", "Power BI", "Tableau", "DBT",
                   "Airflow", "Spark", "Databricks", "BigQuery", "AWS", "Docker", "Git",
