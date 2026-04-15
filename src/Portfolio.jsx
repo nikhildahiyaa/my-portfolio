@@ -1,6 +1,7 @@
 // src/Portfolio.jsx
-import React, { useEffect, useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
+import HeroCanvas from "./components/HeroCanvas";
 import { Button } from "./components/ui/button";
 // We only keep the subparts; we won't use the Card shell itself
 import { CardContent, CardDescription, CardHeader, CardTitle } from "./components/ui/card";
@@ -31,6 +32,7 @@ const PROFILE = {
     "Forecasting",
   ],
   /* location: "Canada",*/
+  photo: "/avatar.jpg",
   blurb:
     "Data Analyst with experience in forecasting, A/B testing, and BI. I turn messy datasets into clear insights and operational wins.",
   email: "dahiya5166@gmail.com",
@@ -233,6 +235,59 @@ const Tag = ({ label }) => (
   </Badge>
 );
 
+/* =========================
+   3-D tilt card
+========================= */
+function TiltCard({ children, className = "" }) {
+  const ref = useRef(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useTransform(y, [-0.5, 0.5], [8, -8]);
+  const rotateY = useTransform(x, [-0.5, 0.5], [-8, 8]);
+  const springX = useSpring(rotateX, { stiffness: 200, damping: 20 });
+  const springY = useSpring(rotateY, { stiffness: 200, damping: 20 });
+
+  function onMove(e) {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    x.set((e.clientX - rect.left) / rect.width - 0.5);
+    y.set((e.clientY - rect.top) / rect.height - 0.5);
+  }
+
+  function onLeave() {
+    x.set(0);
+    y.set(0);
+  }
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      style={{ rotateX: springX, rotateY: springY, transformStyle: "preserve-3d", perspective: 800 }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/* =========================
+   Scroll-reveal wrapper
+========================= */
+const Reveal = ({ children, delay = 0 }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 30, rotateX: 6 }}
+    whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+    viewport={{ once: true, margin: "-80px" }}
+    transition={{ duration: 0.55, delay, ease: "easeOut" }}
+    style={{ transformStyle: "preserve-3d", perspective: 1000 }}
+  >
+    {children}
+  </motion.div>
+);
+
 const useScrollSpy = (ids) => {
   const [active, setActive] = useState(ids[0]);
 
@@ -371,8 +426,9 @@ async function handleContactSubmit(e) {
 </header>
 
         {/* Hero */}
-        <section id="home" className="scroll-mt-24 py-16 sm:py-24">
-          <div className="max-w-6xl mx-auto px-4">
+        <section id="home" className="scroll-mt-24 py-16 sm:py-24 relative overflow-hidden">
+          <HeroCanvas />
+          <div className="max-w-6xl mx-auto px-4 relative z-10">
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
               <p className="text-sm uppercase tracking-wide text-indigo-300/80">{PROFILE.location}</p>
               <h1 className="text-4xl sm:text-5xl font-bold mt-2 leading-tight">
@@ -428,7 +484,7 @@ async function handleContactSubmit(e) {
         {/* About */}
         <section id="about" className="scroll-mt-24 py-14 sm:py-20">
           <div className="max-w-6xl mx-auto px-4 grid lg:grid-cols-2 gap-8 items-stretch">
-<div>
+<Reveal><div>
   <h2 className="text-2xl md:text-3xl font-semibold mb-3 text-slate-100">About</h2>
 
   <div className="space-y-4 text-slate-300">
@@ -464,11 +520,11 @@ async function handleContactSubmit(e) {
       </a>.
     </p>
   </div>
-</div>
+</div></Reveal>
 
 
             {/* Education — forced light card */}
-            <LightCard>
+            <Reveal delay={0.1}><LightCard>
               <CardHeader>
                 <CardTitle className="text-black">Education</CardTitle>
                 <CardDescription className="text-black/70">Formal training</CardDescription>
@@ -484,7 +540,7 @@ async function handleContactSubmit(e) {
                   </ul>
                 </div>
               </CardContent>
-            </LightCard>
+            </LightCard></Reveal>
           </div>
         </section>
 
@@ -493,7 +549,7 @@ async function handleContactSubmit(e) {
           <div className="max-w-6xl mx-auto px-4 space-y-6">
             <h2 className="text-2xl md:text-3xl font-semibold text-slate-100">Experience</h2>
 
-            <LightCard>
+            <Reveal><LightCard>
               <CardHeader>
                 <CardTitle className="text-black">Research Assistant — Beedie School of Business (SFU)</CardTitle>
                 <CardDescription className="text-black/70">Sept 2024 – Dec 2024 • Burnaby, BC</CardDescription>
@@ -503,9 +559,9 @@ async function handleContactSubmit(e) {
                 <p>Time-series & lag regressions; early-week ads showed ~15% stronger weekend impact.</p>
                 <p>Develop dashboards in Power BI, reallocating ~20% of ad spend to high-ROI period</p>
               </CardContent>
-            </LightCard>
+            </LightCard></Reveal>
 
-            <LightCard>
+            <Reveal delay={0.1}><LightCard>
               <CardHeader>
                 <CardTitle className="text-black">Data Analyst — UBC Centre for Heart Lung Innovation</CardTitle>
                 <CardDescription className="text-black/70">Sept 2023 – Apr 2024 • Vancouver, BC</CardDescription>
@@ -514,9 +570,9 @@ async function handleContactSubmit(e) {
                 <p>Analyzed national cohort (5,176 participants) with SAS/STATA; logistic regressions & meta-analysis.</p>
                 <p>Found asbestos exposure associated with chronic cough (OR≈1.8, p&lt;0.01); consistent effects across 7/9 sites.</p>
               </CardContent>
-            </LightCard>
+            </LightCard></Reveal>
 
-            <LightCard>
+            <Reveal delay={0.2}><LightCard>
               <CardHeader>
                 <CardTitle className="text-black">AI/ML Intern — Ernst &amp; Young</CardTitle>
                 <CardDescription className="text-black/70">May 2022 – Aug 2022 • Gurugram, India</CardDescription>
@@ -525,7 +581,7 @@ async function handleContactSubmit(e) {
                 <p>Built OpenCV + EasyOCR redaction tool (regex-enhanced); ~95% ID detection accuracy.</p>
                 <p>Interactive GUI; reduced processing time by ~40% and improved privacy compliance.</p>
               </CardContent>
-            </LightCard>
+            </LightCard></Reveal>
           </div>
         </section>
 
@@ -577,6 +633,7 @@ async function handleContactSubmit(e) {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
           >
+            <TiltCard>
             <LightCard className="overflow-hidden hover:shadow-md transition-shadow">
               <div className="relative h-40 bg-slate-200">
                 <img
@@ -640,6 +697,7 @@ async function handleContactSubmit(e) {
                 </div>
               </CardContent>
             </LightCard>
+            </TiltCard>
           </motion.div>
         ))}
       </AnimatePresence>
