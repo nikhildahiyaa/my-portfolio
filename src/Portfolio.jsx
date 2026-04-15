@@ -330,77 +330,106 @@ export default function Portfolio() {
       </header>
 
       {/* ── Hero ── */}
-      <section id="home" className="scroll-mt-24 py-20 sm:py-32 relative overflow-hidden">
+      <section id="home" className="scroll-mt-24 py-20 sm:py-28 relative overflow-hidden">
         <HeroCanvas />
         <div className="max-w-6xl mx-auto px-4 relative z-10">
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12">
 
-            {/* ATB badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-4 py-1.5 text-sm text-indigo-300 mb-6">
-              <Briefcase className="h-3.5 w-3.5" />
-              Currently: Data Scientist @ ATB Financial
-            </div>
-
-            {/* Name + avatar row */}
-            <div className="flex items-center gap-5 mb-1">
+            {/* ── Left: text content ── */}
+            <motion.div className="flex-1 min-w-0" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <h1 className="text-4xl sm:text-6xl font-bold leading-tight tracking-tight">
                 Hi, I'm <span className="bg-gradient-to-r from-indigo-400 via-cyan-400 to-fuchsia-400 bg-clip-text text-transparent">{PROFILE.name}</span>
               </h1>
-              <img
-                src="/IMG_9302.jpg"
-                alt="Nikhil Dahiya"
-                className="h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover object-top shrink-0 ring-2 ring-white/10"
-              />
-            </div>
 
-            {/* rotating subtitle */}
-            <div className="h-9 mt-3">
-              <AnimatePresence mode="wait">
-                <motion.p
-                  key={PROFILE.roleWords[wordIndex]}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.25 }}
-                  className="text-xl text-slate-300"
-                >
-                  {PROFILE.roleWords[wordIndex]}
-                </motion.p>
-              </AnimatePresence>
-            </div>
+              {/* rotating subtitle */}
+              <div className="h-9 mt-3">
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={PROFILE.roleWords[wordIndex]}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.25 }}
+                    className="text-xl text-slate-300"
+                  >
+                    {PROFILE.roleWords[wordIndex]}
+                  </motion.p>
+                </AnimatePresence>
+              </div>
 
-            <p className="mt-4 text-slate-400 max-w-xl text-lg">{PROFILE.blurb}</p>
+              <p className="mt-4 text-slate-400 max-w-xl text-lg">{PROFILE.blurb}</p>
 
-            {/* CTA buttons */}
-            <div className="mt-7 flex flex-wrap gap-3">
-              <a href={PROFILE.socials.github} target="_blank" rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl bg-white/10 border border-white/20 text-slate-100 hover:bg-white/20 text-sm font-medium px-4 py-2 transition-colors">
-                <Github className="h-4 w-4" /> GitHub
+              {/* CTA buttons */}
+              <div className="mt-7 flex flex-wrap gap-3">
+                <a href={PROFILE.socials.github} target="_blank" rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-white/10 border border-white/20 text-slate-100 hover:bg-white/20 text-sm font-medium px-4 py-2 transition-colors">
+                  <Github className="h-4 w-4" /> GitHub
+                </a>
+                <a href={PROFILE.socials.linkedin} target="_blank" rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-white/10 border border-white/20 text-cyan-300 hover:bg-white/20 text-sm font-medium px-4 py-2 transition-colors">
+                  <Linkedin className="h-4 w-4" /> LinkedIn
+                </a>
+                <a href={`mailto:${PROFILE.email}`}
+                  className="inline-flex items-center gap-2 rounded-xl bg-white/10 border border-white/20 text-fuchsia-300 hover:bg-white/20 text-sm font-medium px-4 py-2 transition-colors">
+                  <Mail className="h-4 w-4" /> Email
+                </a>
+              </div>
+
+              {/* Impact stats */}
+              <div className="mt-10 flex flex-wrap gap-6">
+                {HERO_STATS.map((s) => (
+                  <div key={s.label} className="flex flex-col">
+                    <span className="text-2xl font-bold text-indigo-300">{s.value}</span>
+                    <span className="text-xs text-slate-500 uppercase tracking-wide">{s.label}</span>
+                  </div>
+                ))}
+              </div>
+
+              <a href="#projects" className="group mt-10 inline-flex items-center gap-2 text-sm text-slate-400 hover:text-indigo-300 transition-colors">
+                See my work <ChevronDown className="h-4 w-4 group-hover:translate-y-0.5 transition-transform" />
               </a>
-              <a href={PROFILE.socials.linkedin} target="_blank" rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl bg-white/10 border border-white/20 text-cyan-300 hover:bg-white/20 text-sm font-medium px-4 py-2 transition-colors">
-                <Linkedin className="h-4 w-4" /> LinkedIn
-              </a>
-              <a href={`mailto:${PROFILE.email}`}
-                className="inline-flex items-center gap-2 rounded-xl bg-white/10 border border-white/20 text-fuchsia-300 hover:bg-white/20 text-sm font-medium px-4 py-2 transition-colors">
-                <Mail className="h-4 w-4" /> Email
-              </a>
-            </div>
+            </motion.div>
 
-            {/* Impact stats */}
-            <div className="mt-10 flex flex-wrap gap-6">
-              {HERO_STATS.map((s) => (
-                <div key={s.label} className="flex flex-col">
-                  <span className="text-2xl font-bold text-indigo-300">{s.value}</span>
-                  <span className="text-xs text-slate-500 uppercase tracking-wide">{s.label}</span>
+            {/* ── Right: profile card ── */}
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }} className="shrink-0 w-full lg:w-64">
+              <GlassCard className="p-6 flex flex-col items-center text-center gap-4">
+                {/* Large circular photo */}
+                <div className="relative">
+                  <div className="h-44 w-44 rounded-full overflow-hidden ring-2 ring-white/10">
+                    <img
+                      src="/IMG_9302.jpg"
+                      alt="Nikhil Dahiya"
+                      className="h-full w-full object-cover object-top"
+                    />
+                  </div>
+                  {/* Online dot */}
+                  <span className="absolute bottom-2 right-2 h-4 w-4 rounded-full bg-emerald-400 ring-2 ring-slate-900" />
                 </div>
-              ))}
-            </div>
 
-            <a href="#projects" className="group mt-10 inline-flex items-center gap-2 text-sm text-slate-400 hover:text-indigo-300 transition-colors">
-              See my work <ChevronDown className="h-4 w-4 group-hover:translate-y-0.5 transition-transform" />
-            </a>
-          </motion.div>
+                {/* Info */}
+                <div className="space-y-2 w-full">
+                  <p className="font-semibold text-slate-100 text-lg">{PROFILE.name}</p>
+                  <div className="inline-flex items-center gap-1.5 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-xs text-indigo-300">
+                    <Briefcase className="h-3 w-3" />
+                    Data Scientist @ ATB Financial
+                  </div>
+                  <p className="text-sm text-slate-400">Calgary, AB, Canada</p>
+                  <div className="border-t border-white/5 pt-3 flex justify-center gap-4">
+                    <a href={PROFILE.socials.github} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-slate-200 transition-colors">
+                      <Github className="h-5 w-5" />
+                    </a>
+                    <a href={PROFILE.socials.linkedin} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-cyan-300 transition-colors">
+                      <Linkedin className="h-5 w-5" />
+                    </a>
+                    <a href={`mailto:${PROFILE.email}`} className="text-slate-400 hover:text-fuchsia-300 transition-colors">
+                      <Mail className="h-5 w-5" />
+                    </a>
+                  </div>
+                </div>
+              </GlassCard>
+            </motion.div>
+
+          </div>
         </div>
       </section>
 
