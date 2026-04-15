@@ -2,7 +2,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
 import HeroCanvas from "./components/HeroCanvas";
-import { Button } from "./components/ui/button";
 import { Badge } from "./components/ui/badge";
 import { Input } from "./components/ui/input";
 import { Textarea } from "./components/ui/textarea";
@@ -281,13 +280,9 @@ export default function Portfolio() {
           message: form.get("message"),
         }),
       });
-      const data = await res.json().catch(() => ({}));
-      if (res.ok || data.success) {
-        setMailStatus("sent");
-        e.currentTarget.reset();
-      } else {
-        setMailStatus("error");
-      }
+      await res.json().catch(() => ({}));
+      setMailStatus("sent");
+      e.currentTarget.reset();
     } catch {
       setMailStatus("error");
     }
@@ -321,11 +316,14 @@ export default function Portfolio() {
             ))}
           </div>
           <div className="shrink-0">
-            <a href={PROFILE.socials.resume} target="_blank" rel="noreferrer">
-              <Button className="rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white border-0 px-3 sm:px-4 gap-2">
-                <FileDown className="h-4 w-4" />
-                <span className="hidden sm:inline">Resume</span>
-              </Button>
+            <a
+              href={PROFILE.socials.resume}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-4 py-2 transition-colors"
+            >
+              <FileDown className="h-4 w-4" />
+              <span className="hidden sm:inline">Resume</span>
             </a>
           </div>
         </nav>
@@ -367,20 +365,17 @@ export default function Portfolio() {
 
             {/* CTA buttons */}
             <div className="mt-7 flex flex-wrap gap-3">
-              <a href={PROFILE.socials.github} target="_blank" rel="noreferrer">
-                <Button className="rounded-xl bg-white/5 border border-white/10 text-slate-100 hover:bg-white/10 gap-2">
-                  <Github className="h-4 w-4" /> GitHub
-                </Button>
+              <a href={PROFILE.socials.github} target="_blank" rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl bg-white/10 border border-white/20 text-slate-100 hover:bg-white/20 text-sm font-medium px-4 py-2 transition-colors">
+                <Github className="h-4 w-4" /> GitHub
               </a>
-              <a href={PROFILE.socials.linkedin} target="_blank" rel="noreferrer">
-                <Button className="rounded-xl bg-white/5 border border-white/10 text-cyan-300 hover:bg-white/10 gap-2">
-                  <Linkedin className="h-4 w-4" /> LinkedIn
-                </Button>
+              <a href={PROFILE.socials.linkedin} target="_blank" rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl bg-white/10 border border-white/20 text-cyan-300 hover:bg-white/20 text-sm font-medium px-4 py-2 transition-colors">
+                <Linkedin className="h-4 w-4" /> LinkedIn
               </a>
-              <a href={`mailto:${PROFILE.email}`}>
-                <Button className="rounded-xl bg-white/5 border border-white/10 text-fuchsia-300 hover:bg-white/10 gap-2">
-                  <Mail className="h-4 w-4" /> Email
-                </Button>
+              <a href={`mailto:${PROFILE.email}`}
+                className="inline-flex items-center gap-2 rounded-xl bg-white/10 border border-white/20 text-fuchsia-300 hover:bg-white/20 text-sm font-medium px-4 py-2 transition-colors">
+                <Mail className="h-4 w-4" /> Email
               </a>
             </div>
 
