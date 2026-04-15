@@ -365,14 +365,16 @@ async function handleContactSubmit(e) {
         email: form.get("email"),
         subject: form.get("subject"),
         message: form.get("message"),
-        botcheck: form.get("botcheck"),
       }),
     });
 
-    const data = await res.json();
-    if (!data.success) throw new Error(data.message);
-    setMailStatus("sent");
-    e.currentTarget.reset();
+    const data = await res.json().catch(() => ({}));
+    if (res.ok || data.success) {
+      setMailStatus("sent");
+      e.currentTarget.reset();
+    } else {
+      setMailStatus("error");
+    }
   } catch {
     setMailStatus("error");
   }
@@ -789,8 +791,6 @@ async function handleContactSubmit(e) {
       </CardHeader>
       <CardContent>
         <form className="grid sm:grid-cols-2 gap-4" onSubmit={handleContactSubmit}>
-          {/* Web3Forms bot protection */}
-          <input type="checkbox" name="botcheck" className="hidden" style={{ display: "none" }} />
 
           <Input
             name="name"
