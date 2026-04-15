@@ -346,37 +346,35 @@ export default function Portfolio() {
     () => (cat === "All" ? ALL_PROJECTS : ALL_PROJECTS.filter((p) => p.tags.includes(cat))),
     [cat]
   );
-// --- Contact form state + submit handler ---
+// --- Contact form state + submit handler (Web3Forms) ---
 const [mailStatus, setMailStatus] = useState("idle"); // idle | sending | sent | error
-const [mailError, setMailError] = useState("");
 
 async function handleContactSubmit(e) {
   e.preventDefault();
   const form = new FormData(e.currentTarget);
 
   setMailStatus("sending");
-  setMailError("");
 
   try {
-    const res = await fetch("/api/contact", {
+    const res = await fetch("https://api.web3forms.com/submit", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify({
+        access_key: "7b84995d-0778-4267-99ef-5a27e6c8f587",
         name: form.get("name"),
         email: form.get("email"),
         subject: form.get("subject"),
         message: form.get("message"),
-        // honeypot (hidden field below). If a bot fills it, your API should reject.
-        company: form.get("company"),
+        botcheck: form.get("botcheck"),
       }),
     });
 
-    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message);
     setMailStatus("sent");
     e.currentTarget.reset();
-  } catch (err) {
+  } catch {
     setMailStatus("error");
-    setMailError("Something went wrong. Please try again or email me directly.");
   }
 }
 
@@ -791,8 +789,8 @@ async function handleContactSubmit(e) {
       </CardHeader>
       <CardContent>
         <form className="grid sm:grid-cols-2 gap-4" onSubmit={handleContactSubmit}>
-          {/* Honeypot field (bots will fill this; humans won’t see it) */}
-          <input name="company" className="hidden" tabIndex={-1} autoComplete="off" />
+          {/* Web3Forms bot protection */}
+          <input type="checkbox" name="botcheck" className="hidden" style={{ display: "none" }} />
 
           <Input
             name="name"
@@ -847,7 +845,7 @@ async function handleContactSubmit(e) {
             </p>
           )}
           {mailStatus === "error" && (
-            <p className="sm:col-span-2 text-sm text-red-600">{mailError}</p>
+            <p className="sm:col-span-2 text-sm text-red-600">Something went wrong. Please email me directly.</p>
           )}
 
           <p className="sm:col-span-2 text-xs text-black">
