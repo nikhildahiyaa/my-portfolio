@@ -1,138 +1,158 @@
-import { useRef, useMemo, Suspense } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Points, PointMaterial } from "@react-three/drei";
-import * as THREE from "three";
+import { useEffect, useRef } from "react";
 
-/* ── Particle cloud ── */
-function ParticleField() {
-  const ref = useRef();
+/* Floating CSS wireframe shapes */
+const SHAPES = [
+  { size: 90,  top: "12%", left: "8%",  delay: "0s",   dur: "9s",  color: "#818cf8", clip: "polygon(50% 0%, 0% 100%, 100% 100%)" },
+  { size: 70,  top: "60%", left: "5%",  delay: "2s",   dur: "11s", color: "#22d3ee", clip: "polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%)" },
+  { size: 80,  top: "15%", right: "7%", delay: "1s",   dur: "8s",  color: "#e879f9", clip: "polygon(50% 0%,100% 50%,50% 100%,0% 50%)" },
+  { size: 55,  top: "70%", right: "10%",delay: "3s",   dur: "13s", color: "#818cf8", clip: "polygon(50% 0%, 0% 100%, 100% 100%)" },
+  { size: 100, top: "40%", left: "88%", delay: "0.5s", dur: "10s", color: "#22d3ee", clip: "polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%)" },
+  { size: 60,  top: "80%", left: "30%", delay: "4s",   dur: "12s", color: "#e879f9", clip: "polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%)" },
+];
 
-  const positions = useMemo(() => {
-    const arr = new Float32Array(3000 * 3);
-    for (let i = 0; i < 3000; i++) {
-      arr[i * 3]     = (Math.random() - 0.5) * 12;
-      arr[i * 3 + 1] = (Math.random() - 0.5) * 12;
-      arr[i * 3 + 2] = (Math.random() - 0.5) * 8;
+function FloatingShapes() {
+  return (
+    <>
+      <style>{`
+        @keyframes floatShape {
+          0%   { transform: translateY(0px) rotate(0deg);   opacity: 0.18; }
+          50%  { transform: translateY(-22px) rotate(180deg); opacity: 0.28; }
+          100% { transform: translateY(0px) rotate(360deg); opacity: 0.18; }
+        }
+      `}</style>
+      {SHAPES.map((s, i) => (
+        <div
+          key={i}
+          style={{
+            position: "absolute",
+            width: s.size,
+            height: s.size,
+            top: s.top,
+            left: s.left,
+            right: s.right,
+            background: s.color,
+            clipPath: s.clip,
+            animation: `floatShape ${s.dur} ${s.delay} ease-in-out infinite`,
+            pointerEvents: "none",
+          }}
+        />
+      ))}
+    </>
+  );
+}
+
+/* Canvas 2D particle network */
+export default function HeroCanvas() {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+
+    const COLORS = ["#818cf8", "#22d3ee", "#e879f9"];
+    const COUNT = 70;
+    let particles = [];
+    let animId;
+    let mouse = { x: -9999, y: -9999 };
+
+    function resize() {
+      canvas.width  = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
     }
-    return arr;
+
+    function init() {
+      particles = Array.from({ length: COUNT }, () => ({
+        x:  Math.random() * canvas.width,
+        y:  Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        r:  Math.random() * 2 + 1.2,
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      }));
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      /* connections */
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const d  = Math.sqrt(dx * dx + dy * dy);
+          if (d < 130) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(129,140,248,${(1 - d / 130) * 0.35})`;
+            ctx.lineWidth = 0.8;
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      /* particles */
+      for (const p of particles) {
+        /* subtle mouse repulsion */
+        const dx = p.x - mouse.x;
+        const dy = p.y - mouse.y;
+        const d  = Math.sqrt(dx * dx + dy * dy);
+        if (d < 100) {
+          p.vx += (dx / d) * 0.08;
+          p.vy += (dy / d) * 0.08;
+        }
+
+        /* speed cap */
+        const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+        if (speed > 1.5) { p.vx *= 0.95; p.vy *= 0.95; }
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0) { p.x = 0; p.vx *= -1; }
+        if (p.x > canvas.width)  { p.x = canvas.width;  p.vx *= -1; }
+        if (p.y < 0) { p.y = 0; p.vy *= -1; }
+        if (p.y > canvas.height) { p.y = canvas.height; p.vy *= -1; }
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = 0.8;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+
+      animId = requestAnimationFrame(draw);
+    }
+
+    const onMouseMove = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouse = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    };
+
+    resize();
+    init();
+    draw();
+
+    window.addEventListener("resize", () => { resize(); init(); });
+    canvas.addEventListener("mousemove", onMouseMove);
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", resize);
+      canvas.removeEventListener("mousemove", onMouseMove);
+    };
   }, []);
 
-  useFrame((_, delta) => {
-    if (!ref.current) return;
-    ref.current.rotation.x -= delta * 0.04;
-    ref.current.rotation.y -= delta * 0.025;
-  });
-
   return (
-    <Points ref={ref} positions={positions} stride={3} frustumCulled={false}>
-      <PointMaterial
-        transparent
-        color="#818cf8"
-        size={0.018}
-        sizeAttenuation
-        depthWrite={false}
-        opacity={0.7}
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <FloatingShapes />
+      <canvas
+        ref={canvasRef}
+        style={{ width: "100%", height: "100%", display: "block" }}
+        className="pointer-events-auto"
       />
-    </Points>
-  );
-}
-
-/* ── Individual floating wireframe shape ── */
-function FloatingShape({ position, speed, color, children }) {
-  const ref = useRef();
-  const offset = useMemo(() => Math.random() * Math.PI * 2, []);
-
-  useFrame(({ clock }) => {
-    if (!ref.current) return;
-    const t = clock.elapsedTime;
-    ref.current.rotation.x = t * speed * 0.5;
-    ref.current.rotation.y = t * speed * 0.35;
-    ref.current.position.y = position[1] + Math.sin(t * speed + offset) * 0.3;
-  });
-
-  return (
-    <mesh ref={ref} position={position}>
-      {children}
-      <meshStandardMaterial color={color} wireframe opacity={0.55} transparent />
-    </mesh>
-  );
-}
-
-/* ── Mouse parallax wrapper ── */
-function Scene({ mouse }) {
-  const groupRef = useRef();
-
-  useFrame(() => {
-    if (!groupRef.current) return;
-    groupRef.current.rotation.y += (mouse.current[0] * 0.3 - groupRef.current.rotation.y) * 0.05;
-    groupRef.current.rotation.x += (-mouse.current[1] * 0.15 - groupRef.current.rotation.x) * 0.05;
-  });
-
-  return (
-    <group ref={groupRef}>
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[5, 8, 5]} intensity={1} />
-      <ParticleField />
-
-      {/* Indigo icosahedron */}
-      <FloatingShape position={[-3.2, 1.2, -1.5]} speed={0.38} color="#818cf8">
-        <icosahedronGeometry args={[0.9, 0]} />
-      </FloatingShape>
-
-      {/* Cyan torus */}
-      <FloatingShape position={[3.4, -0.6, -2]} speed={0.55} color="#22d3ee">
-        <torusGeometry args={[0.55, 0.18, 8, 24]} />
-      </FloatingShape>
-
-      {/* Fuchsia octahedron */}
-      <FloatingShape position={[-1.5, -2, -1]} speed={0.28} color="#e879f9">
-        <octahedronGeometry args={[0.65]} />
-      </FloatingShape>
-
-      {/* Indigo tetrahedron */}
-      <FloatingShape position={[2, 2, -0.8]} speed={0.48} color="#818cf8">
-        <tetrahedronGeometry args={[0.55]} />
-      </FloatingShape>
-
-      {/* Cyan dodecahedron */}
-      <FloatingShape position={[0.5, -1.5, -2.5]} speed={0.33} color="#22d3ee">
-        <dodecahedronGeometry args={[0.5]} />
-      </FloatingShape>
-
-      {/* Fuchsia torus knot – small */}
-      <FloatingShape position={[-2.5, -1.2, -2]} speed={0.2} color="#e879f9">
-        <torusKnotGeometry args={[0.3, 0.1, 60, 8]} />
-      </FloatingShape>
-    </group>
-  );
-}
-
-/* ── Exported canvas ── */
-export default function HeroCanvas() {
-  const mouse = useRef([0, 0]);
-
-  function onMouseMove(e) {
-    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
-    mouse.current = [
-      ((e.clientX - left) / width - 0.5) * 2,
-      ((e.clientY - top) / height - 0.5) * 2,
-    ];
-  }
-
-  return (
-    <div
-      className="absolute inset-0 -z-10"
-      onMouseMove={onMouseMove}
-    >
-      <Canvas
-        camera={{ position: [0, 0, 6], fov: 55 }}
-        gl={{ antialias: true, alpha: true }}
-        style={{ background: "transparent" }}
-      >
-        <Suspense fallback={null}>
-          <Scene mouse={mouse} />
-        </Suspense>
-      </Canvas>
     </div>
   );
 }

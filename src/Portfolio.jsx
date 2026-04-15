@@ -1,5 +1,5 @@
 // src/Portfolio.jsx
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
 import HeroCanvas from "./components/HeroCanvas";
 import { Button } from "./components/ui/button";
