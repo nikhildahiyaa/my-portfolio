@@ -3,8 +3,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
 import HeroCanvas from "./components/HeroCanvas";
 import { Button } from "./components/ui/button";
-// We only keep the subparts; we won't use the Card shell itself
-import { CardContent, CardDescription, CardHeader, CardTitle } from "./components/ui/card";
 import { Badge } from "./components/ui/badge";
 import { Input } from "./components/ui/input";
 import { Textarea } from "./components/ui/textarea";
@@ -16,6 +14,7 @@ import {
   ArrowRight,
   ChevronDown,
   Filter,
+  Briefcase,
 } from "lucide-react";
 
 /* =========================
@@ -25,219 +24,161 @@ const PROFILE = {
   name: "Nikhil Dahiya",
   roleWords: [
     "Data Scientist",
-    "Data Analyst",
-    "Business Analyst",
-    "BI Developer",
-    "Machine Learning",
+    "Predictive Modeling",
+    "Risk Analytics",
+    "ML Engineering",
     "Forecasting",
+    "Data Pipelines",
   ],
-  /* location: "Canada",*/
-  photo: "/avatar.jpg",
   blurb:
-    "Data Scientist with 2+ years of experience building predictive models, risk-focused analytics, and data pipelines that support scenario analysis, stress testing, and data-driven decision-making.",
+    "Turning complex data into decisions — predictive models, risk analytics, and pipelines that move organizations forward.",
   email: "dahiya5166@gmail.com",
   socials: {
     github: "https://github.com/nikhildahiyaa",
     linkedin: "https://www.linkedin.com/in/nikhil-dahiya/",
-    // Tip: avoid spaces in filenames; if you keep the space, encode it as %20
     resume: "/Nikhil%20Dahiya%20Resume.pdf",
   },
 };
 
-const FALLBACK_COVER =
-  "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=60";
+const HERO_STATS = [
+  { value: "2M+", label: "Records Processed" },
+  { value: "7.45%", label: "Forecast MAPE" },
+  { value: "95%", label: "OCR Accuracy" },
+];
 
 /* =========================
-   Projects (ordered by importance)
-   ========================= */
-
+   Projects
+========================= */
 const ALL_PROJECTS = [
   {
     title: "BCMEA Labour Demand Forecasting",
-    summary:
-      "Unified dock/vessel labour model; reduced error from ~40% MAPE to 7.45%.",
-    details:
-      "Merged 2M+ payroll, 60K+ gang allocations, 4K+ vessel logs. Holiday & vessel-cluster features, backtesting, automated reporting.",
+    summary: "Reduced forecast error from ~40% MAPE to 7.45% across dock & vessel workstreams.",
+    details: "Merged 2M+ payroll, 60K+ gang allocations, 4K+ vessel logs. Holiday & vessel-cluster features, backtesting, automated reporting.",
+    metric: "7.45% MAPE",
     tags: ["Forecasting", "Python", "Time Series"],
-    links: {
-      code: "https://github.com/nikhildahiyaa/BCMEA-Labor-Forecast",
-      demo: "#",
-      report: "#",
-    },
-    cover:
-      "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=60",
+    links: { code: "https://github.com/nikhildahiyaa/BCMEA-Labor-Forecast", demo: "#", report: "#" },
+    cover: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=60",
   },
   {
     title: "Airbnb Booking Prediction",
-    summary:
-      "213k users • 69% accuracy (AUC 0.735); desktop users 30% more likely to book.",
-    details:
-      "Behavioral features; logistic regression & random forest; surfaced device & seasonal drivers for marketing/UX.",
+    summary: "213k users · 69% accuracy (AUC 0.735); desktop users 30% more likely to book.",
+    details: "Behavioral features; logistic regression & random forest; surfaced device & seasonal drivers for marketing/UX.",
+    metric: "69% Accuracy",
     tags: ["Classification", "Python", "Product Analytics"],
-    links: {
-      code: "https://github.com/nikhildahiyaa/Airbnb-Booking-Prediction",
-      demo: "#",
-      report: "#",
-    },
-    cover:
-      "https://images.unsplash.com/photo-1556761175-4b46a572b786?auto=format&fit=crop&w=1200&q=60",
+    links: { code: "https://github.com/nikhildahiyaa/Airbnb-Booking-Prediction", demo: "#", report: "#" },
+    cover: "https://images.unsplash.com/photo-1556761175-4b46a572b786?auto=format&fit=crop&w=1200&q=60",
   },
   {
     title: "Customer Segmentation (RFM + K-Means)",
-    summary:
-      "21% “Best Customers” contributing 50%+ of revenue; actionable cohorts.",
-    details:
-      "Cleaned 135k incomplete rows; built RFM features; K-Means clustering + visuals for targeted campaigns.",
+    summary: "21% 'Best Customers' contributing 50%+ of revenue; actionable cohorts for targeted campaigns.",
+    details: "Cleaned 135k incomplete rows; built RFM features; K-Means clustering + visuals.",
+    metric: "50%+ Revenue",
     tags: ["Clustering", "Python", "Marketing"],
-    links: {
-      code: "https://github.com/nikhildahiyaa/Customer-Segmentation-Using-RFM-and-K-Means-Clustering",
-      demo: "#",
-      report: "#",
-    },
-    cover:
-      "https://images.unsplash.com/photo-1545235617-9465d2a55698?auto=format&fit=crop&w=1200&q=60",
+    links: { code: "https://github.com/nikhildahiyaa/Customer-Segmentation-Using-RFM-and-K-Means-Clustering", demo: "#", report: "#" },
+    cover: "https://images.unsplash.com/photo-1545235617-9465d2a55698?auto=format&fit=crop&w=1200&q=60",
   },
   {
     title: "Image Redaction Tool",
-    summary: "OpenCV + EasyOCR pipeline; ~95% ID detection; ~40% faster processing.",
-    details:
-      "Regex-enhanced OCR, redaction overlays, batch pipeline + simple GUI for compliance.",
+    summary: "OpenCV + EasyOCR pipeline; ~95% ID detection accuracy; ~40% faster processing.",
+    details: "Regex-enhanced OCR, redaction overlays, batch pipeline + simple GUI for compliance.",
+    metric: "95% Accuracy",
     tags: ["Computer Vision", "Python", "OCR"],
-    links: {
-      code: "https://github.com/nikhildahiyaa/Image-Redaction-Project",
-      demo: "#",
-      report: "#",
-    },
-    cover:
-      "https://images.unsplash.com/photo-1531834685032-c34bf0d84c77?auto=format&fit=crop&w=1200&q=60",
+    links: { code: "https://github.com/nikhildahiyaa/Image-Redaction-Project", demo: "#", report: "#" },
+    cover: "https://images.unsplash.com/photo-1531834685032-c34bf0d84c77?auto=format&fit=crop&w=1200&q=60",
   },
   {
     title: "Box Office Revenue Prediction",
-    summary: "Linear regression baseline with feature engineering; research-grade.",
-    details:
-      "Scraped/cleaned movie features; explored lagged ad effects; regression with diagnostics.",
+    summary: "Linear regression with feature engineering; early-week ads show ~15% stronger weekend impact.",
+    details: "Scraped/cleaned movie features; explored lagged ad effects; regression with diagnostics.",
+    metric: "~15% Ad Lift",
     tags: ["Regression", "Python", "Research"],
-    links: {
-      code: "https://github.com/nikhildahiyaa/Box-Office-Revenue-Prediction-Using-Linear-Regression-in-ML",
-      demo: "#",
-      report: "#",
-    },
-    cover:
-      "https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=1200&q=60",
+    links: { code: "https://github.com/nikhildahiyaa/Box-Office-Revenue-Prediction-Using-Linear-Regression-in-ML", demo: "#", report: "#" },
+    cover: "https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=1200&q=60",
   },
   {
     title: "YAIP — Yet Another Image Processor",
-    summary: "CLI for common image transforms; speed + DX focused.",
-    details:
-      "OpenCV wrapper; resize, filters, format conversions with simple flags.",
+    summary: "CLI for common image transforms; speed + DX focused with 40% processing time reduction.",
+    details: "OpenCV wrapper; resize, filters, format conversions with simple flags.",
+    metric: "40% Faster",
     tags: ["Computer Vision", "Python", "CLI"],
-    links: {
-      code: "https://github.com/nikhildahiyaa/Yet-Another-Image-Processor-YAIP-",
-      demo: "#",
-      report: "#",
-    },
-    cover:
-      "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=1200&q=60",
+    links: { code: "https://github.com/nikhildahiyaa/Yet-Another-Image-Processor-YAIP-", demo: "#", report: "#" },
+    cover: "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=1200&q=60",
   },
   {
     title: "Data Compression Performance Analysis",
-    summary: "Benchmarked codecs on an org dataset; speed vs size trade-offs.",
+    summary: "Benchmarked codecs on an org dataset; speed vs size trade-offs with repeatable test suite.",
     details: "Repeatable tests, plots, recommendation of default codecs.",
+    metric: "Benchmark",
     tags: ["Data Engineering", "Python", "Performance"],
-    links: {
-      code: "https://github.com/nikhildahiyaa/Data-Compression-Performance-Analysis-for-Organizations-Dataset-",
-      demo: "#",
-      report: "#",
-    },
-    cover:
-      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=60",
+    links: { code: "https://github.com/nikhildahiyaa/Data-Compression-Performance-Analysis-for-Organizations-Dataset-", demo: "#", report: "#" },
+    cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=60",
   },
   {
     title: "Traveling Salesperson Problem (TSP) Solver",
-    summary: "Heuristics for TSP; compares tour quality vs compute time.",
-    details: "Nearest neighbor, 2-opt; plotted routes and trade-offs.",
+    summary: "Heuristics for TSP; nearest neighbor + 2-opt comparing tour quality vs compute time.",
+    details: "Plotted routes and trade-offs.",
+    metric: "2-opt Heuristic",
     tags: ["Optimization", "Algorithms", "C++"],
-    links: {
-      code: "https://github.com/nikhildahiyaa/Traveling-Salesperson-Problem-TSP-Solver",
-      demo: "#",
-      report: "#",
-    },
-    cover:
-      "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&w=1200&q=60",
+    links: { code: "https://github.com/nikhildahiyaa/Traveling-Salesperson-Problem-TSP-Solver", demo: "#", report: "#" },
+    cover: "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&w=1200&q=60",
   },
   {
     title: "Fifteen Puzzle Solver",
-    summary: "Classic state-space search with heuristics (A*/IDA*).",
+    summary: "Classic state-space search with A*/IDA* heuristics; Manhattan distance analysis.",
     details: "Manhattan heuristics; branching/memory analysis.",
+    metric: "A* / IDA*",
     tags: ["Algorithms", "Search", "Java"],
-    links: {
-      code: "https://github.com/nikhildahiyaa/Fifteen-Puzzle-Solver",
-      demo: "#",
-      report: "#",
-    },
-    cover:
-      "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1200&q=60",
+    links: { code: "https://github.com/nikhildahiyaa/Fifteen-Puzzle-Solver", demo: "#", report: "#" },
+    cover: "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1200&q=60",
   },
   {
     title: "Web Scraping with R",
-    summary: "Tidyverse + rvest pipelines for clean, repeatable scrapes.",
+    summary: "Tidyverse + rvest pipelines for clean, repeatable multi-page scrapes.",
     details: "Multi-page scraping; tidy ETL; CSV/Parquet outputs.",
+    metric: "ETL Pipeline",
     tags: ["ETL", "R", "Web Scraping"],
-    links: {
-      code: "https://github.com/nikhildahiyaa/-Web-Scraping-with-R",
-      demo: "#",
-      report: "#",
-    },
-    cover:
-      "https://images.unsplash.com/photo-1454165205744-3b78555e5572?auto=format&fit=crop&w=1200&q=60",
+    links: { code: "https://github.com/nikhildahiyaa/-Web-Scraping-with-R", demo: "#", report: "#" },
+    cover: "https://images.unsplash.com/photo-1454165205744-3b78555e5572?auto=format&fit=crop&w=1200&q=60",
   },
 ];
 
+const FALLBACK_COVER =
+  "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=60";
+
 const CATEGORIES = [
-  "All",
-  "Forecasting",
-  "BI",
-  "Classification",
-  "Clustering",
-  "Computer Vision",
-  "Optimization",
-  "Algorithms",
-  "ETL",
-  "Product Analytics",
+  "All", "Forecasting", "BI", "Classification", "Clustering",
+  "Computer Vision", "Optimization", "Algorithms", "ETL", "Product Analytics",
+];
+
+const SKILLS = [
+  {
+    label: "Languages",
+    items: ["Python", "R", "SQL"],
+  },
+  {
+    label: "ML & Modeling",
+    items: ["Scikit-learn", "XGBoost", "LightGBM", "Random Forest", "Statsmodels", "Prophet", "Pandas", "NumPy"],
+  },
+  {
+    label: "BI & Visualization",
+    items: ["Power BI", "Tableau", "Excel"],
+  },
+  {
+    label: "Data Eng & Cloud",
+    items: ["Git", "Jupyter", "AWS", "GCP", "Moody's Portfolio Studio"],
+  },
 ];
 
 /* =========================
-   Small helpers
-   ========================= */
-
-// Force-light card that doesn't rely on theme variables.
-// This guarantees a white card on every device.
-const LightCard = ({ className = "", children }) => (
-  <div
-    className={`rounded-2xl border border-slate-200 bg-white text-black shadow-sm ${className}`}
-  >
-    {children}
-  </div>
-);
-
-// Dark card used for the Skills section
-const DarkCard = ({ className = "", children }) => (
-  <div
-    className={`rounded-2xl border border-slate-800 bg-slate-900/80 ${className}`}
-  >
-    {children}
-  </div>
-);
-
-const Tag = ({ label }) => (
-  <Badge className="rounded-full bg-slate-100 border border-slate-300 text-black">
-    {label}
-  </Badge>
-);
-
-/* =========================
-   3-D tilt card
+   UI helpers
 ========================= */
+const GlassCard = ({ className = "", children }) => (
+  <div className={`rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm ${className}`}>
+    {children}
+  </div>
+);
+
+/* 3-D tilt card */
 function TiltCard({ children, className = "" }) {
   const ref = useRef(null);
   const x = useMotionValue(0);
@@ -255,10 +196,7 @@ function TiltCard({ children, className = "" }) {
     y.set((e.clientY - rect.top) / rect.height - 0.5);
   }
 
-  function onLeave() {
-    x.set(0);
-    y.set(0);
-  }
+  function onLeave() { x.set(0); y.set(0); }
 
   return (
     <motion.div
@@ -273,9 +211,7 @@ function TiltCard({ children, className = "" }) {
   );
 }
 
-/* =========================
-   Scroll-reveal wrapper
-========================= */
+/* Scroll-reveal wrapper */
 const Reveal = ({ children, delay = 0 }) => (
   <motion.div
     initial={{ opacity: 0, y: 30, rotateX: 6 }}
@@ -290,37 +226,21 @@ const Reveal = ({ children, delay = 0 }) => (
 
 const useScrollSpy = (ids) => {
   const [active, setActive] = useState(ids[0]);
-
   useEffect(() => {
     const observers = ids.map((id) => {
       const el = document.getElementById(id);
       if (!el) return null;
-
       const obs = new IntersectionObserver(
         ([entry]) => entry.isIntersecting && setActive(id),
         { rootMargin: "-50% 0px -40% 0px", threshold: 0.01 }
       );
-
       obs.observe(el);
       return obs;
     });
-
     return () => observers.forEach((o) => o?.disconnect());
   }, [ids.join("|")]);
-
   return active;
 };
-
-const Anchor = ({ href, children }) => (
-  <a
-    href={href}
-    className="inline-flex items-center gap-2 text-sm text-indigo-700 hover:text-indigo-800 underline-offset-4 hover:underline"
-    target="_blank"
-    rel="noreferrer"
-  >
-    {children} <ArrowRight className="h-4 w-4" />
-  </a>
-);
 
 /* =========================
    Component
@@ -331,12 +251,8 @@ export default function Portfolio() {
   const sections = ["home", "about", "experience", "projects", "skills", "contact"];
   const active = useScrollSpy(sections);
 
-  // Force dark theme on the shell
-  useEffect(() => {
-    document.documentElement.classList.add("dark");
-  }, []);
+  useEffect(() => { document.documentElement.classList.add("dark"); }, []);
 
-  // rotate the subtitle
   useEffect(() => {
     const id = setInterval(() => setWordIndex((w) => (w + 1) % PROFILE.roleWords.length), 1800);
     return () => clearInterval(id);
@@ -346,539 +262,492 @@ export default function Portfolio() {
     () => (cat === "All" ? ALL_PROJECTS : ALL_PROJECTS.filter((p) => p.tags.includes(cat))),
     [cat]
   );
-// --- Contact form state + submit handler (Web3Forms) ---
-const [mailStatus, setMailStatus] = useState("idle"); // idle | sending | sent | error
 
-async function handleContactSubmit(e) {
-  e.preventDefault();
-  const form = new FormData(e.currentTarget);
+  const [mailStatus, setMailStatus] = useState("idle");
 
-  setMailStatus("sending");
-
-  try {
-    const res = await fetch("https://api.web3forms.com/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({
-        access_key: "7b84995d-0778-4267-99ef-5a27e6c8f587",
-        name: form.get("name"),
-        email: form.get("email"),
-        subject: form.get("subject"),
-        message: form.get("message"),
-      }),
-    });
-
-    const data = await res.json().catch(() => ({}));
-    if (res.ok || data.success) {
-      setMailStatus("sent");
-      e.currentTarget.reset();
-    } else {
+  async function handleContactSubmit(e) {
+    e.preventDefault();
+    const form = new FormData(e.currentTarget);
+    setMailStatus("sending");
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: "7b84995d-0778-4267-99ef-5a27e6c8f587",
+          name: form.get("name"),
+          email: form.get("email"),
+          subject: form.get("subject"),
+          message: form.get("message"),
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok || data.success) {
+        setMailStatus("sent");
+        e.currentTarget.reset();
+      } else {
+        setMailStatus("error");
+      }
+    } catch {
       setMailStatus("error");
     }
-  } catch {
-    setMailStatus("error");
   }
-}
 
   return (
-    <div>
-      {/* Dark chrome */}
-      <div className="relative min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-slate-100 antialiased selection:bg-indigo-600/30 selection:text-white">
-        {/* decorative bloom */}
-        <div className="pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(40%_40%_at_50%_15%,black,transparent_70%)]">
-          <div className="absolute -top-40 left-1/2 -translate-x-1/2 h-96 w-[60rem] rounded-full bg-gradient-to-r from-fuchsia-600/20 via-cyan-500/20 to-indigo-600/20 blur-3xl" />
-        </div>
+    <div className="relative min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-100 antialiased selection:bg-indigo-600/30 selection:text-white">
 
-{/* Navbar */}
-<header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-slate-900/70 border-b border-slate-800">
-  <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-    {/* Brand */}
-    <a href="#home" className="font-semibold tracking-tight text-indigo-300 shrink-0">
-      {PROFILE.name}
-    </a>
-
-    {/* Section links — visible on mobile, horizontally scrollable */}
-    <div className="flex items-center gap-5 text-sm overflow-x-auto md:overflow-visible py-1 -mx-2 px-2 grow">
-      {sections.map((id) => (
-        <a
-          key={id}
-          href={`#${id}`}
-          className={
-            "whitespace-nowrap hover:opacity-90 " +
-            (active === id ? "text-indigo-300" : "text-slate-300")
-          }
-        >
-          {id.charAt(0).toUpperCase() + id.slice(1)}
-        </a>
-      ))}
-    </div>
-
-    {/* Resume button — always visible; text hides on xs */}
-    <div className="shrink-0">
-      <a href={PROFILE.socials.resume} className="inline-block">
-        <Button className="rounded-2xl bg-slate-800 text-slate-100 border border-slate-700 hover:bg-slate-700 px-3 sm:px-4">
-          <FileDown className="h-4 w-4 mr-0 sm:mr-2" />
-          <span className="hidden sm:inline">Resume</span>
-        </Button>
-      </a>
-    </div>
-  </nav>
-</header>
-
-        {/* Hero */}
-        <section id="home" className="scroll-mt-24 py-16 sm:py-24 relative overflow-hidden">
-          <HeroCanvas />
-          <div className="max-w-6xl mx-auto px-4 relative z-10">
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <p className="text-sm uppercase tracking-wide text-indigo-300/80">{PROFILE.location}</p>
-              <h1 className="text-4xl sm:text-5xl font-bold mt-2 leading-tight">
-                Hello, I'm <span className="text-indigo-300">{PROFILE.name}</span>
-              </h1>
-
-              {/* rotating subtitle */}
-              <div className="h-8 mt-2">
-                <AnimatePresence mode="wait">
-                  <motion.p
-                    key={PROFILE.roleWords[wordIndex]}
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={{ duration: 0.25 }}
-                    className="text-xl text-slate-200"
-                  >
-                    {PROFILE.roleWords[wordIndex]}
-                  </motion.p>
-                </AnimatePresence>
-              </div>
-
-              <p className="mt-4 text-slate-300 max-w-prose">{PROFILE.blurb}</p>
-
-              <div className="mt-6 flex flex-wrap gap-3">
-                <a href={PROFILE.socials.github}>
-                  <Button className="rounded-2xl bg-slate-800 text-slate-100 hover:bg-slate-700 border border-slate-700">
-                    <Github className="mr-2 h-4 w-4" />
-                    GitHub
-                  </Button>
-                </a>
-                <a href={PROFILE.socials.linkedin}>
-                  <Button className="rounded-2xl bg-slate-800 text-cyan-300 hover:bg-slate-700 border border-slate-700">
-                    <Linkedin className="mr-2 h-4 w-4" />
-                    LinkedIn
-                  </Button>
-                </a>
-                <a href={`mailto:${PROFILE.email}`}>
-                  <Button className="rounded-2xl bg-slate-800 text-fuchsia-300 hover:bg-slate-700 border border-slate-700">
-                    <Mail className="mr-2 h-4 w-4" />
-                    Email
-                  </Button>
-                </a>
-              </div>
-
-              <a href="#projects" className="group mt-10 inline-flex items-center gap-2 text-indigo-300">
-                See my work <ChevronDown className="h-4 w-4 group-hover:translate-y-0.5 transition-transform" />
-              </a>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* About */}
-        <section id="about" className="scroll-mt-24 py-14 sm:py-20">
-          <div className="max-w-6xl mx-auto px-4 grid lg:grid-cols-2 gap-8 items-stretch">
-<Reveal><div>
-  <h2 className="text-2xl md:text-3xl font-semibold mb-3 text-slate-100">About</h2>
-
-  <div className="space-y-4 text-slate-300">
-    <p>
-      I’m a Data Scientist at ATB Financial, based in Calgary, AB — a Simon Fraser University
-      graduate (BSc Data Science, 2025) with an IBM Data Science Professional Certificate.
-    </p>
-
-    <p>
-      I design and deploy end-to-end data pipelines and predictive models using Python and SQL
-      to evaluate downstream impacts and risk drivers. My work spans applied econometrics,
-      forecasting, and scenario analysis to support portfolio-level and operational risk decisions.
-    </p>
-
-    <p>
-      I’m experienced in translating complex analytical outputs into actionable insights for both
-      technical and non-technical stakeholders — whether through Power BI dashboards, regression
-      outputs, or stress-testing frameworks. I’ve also led and mentored 60+ students as an executive
-      of the SFU Data Science Student Club.
-    </p>
-
-    <p>
-      Explore my work in the <a href="#projects" className="underline text-indigo-300">Projects</a> section, or view this site at{" "}
-      <a
-        href="https://nikhil-dahiya-portfolio.vercel.app"
-        target="_blank"
-        rel="noreferrer"
-        className="underline text-indigo-300"
-      >
-        nikhil-dahiya-portfolio.vercel.app
-      </a>.
-    </p>
-  </div>
-</div></Reveal>
-
-
-            {/* Education — forced light card */}
-            <Reveal delay={0.1}><LightCard>
-              <CardHeader>
-                <CardTitle className="text-black">Education</CardTitle>
-                <CardDescription className="text-black/70">Formal training</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3 text-black">
-                <div>
-                  <p className="font-semibold">Simon Fraser University — BSc, Data Science</p>
-                  <p className="text-sm text-black/80">Jan 2021 – Apr 2025 • Burnaby, BC</p>
-                  <ul className="mt-2 list-disc pl-5 text-sm space-y-1">
-                    <li>Statistics, Machine Learning, Data Mining, Algorithms</li>
-                    <li>Databases (SQL/NoSQL), Data Engineering, Cloud (AWS/GCP)</li>
-                    <li>Capstone: BCMEA Labour Demand Forecasting (7.45% MAPE)</li>
-                  </ul>
-                </div>
-                <div className="pt-1">
-                  <p className="font-semibold">IBM Data Science Professional Certificate</p>
-                  <p className="text-sm text-black/80">Completed Oct 2025</p>
-                </div>
-              </CardContent>
-            </LightCard></Reveal>
-          </div>
-        </section>
-
-        {/* Experience — forced light cards */}
-        <section id="experience" className="scroll-mt-24 py-14 sm:py-20">
-          <div className="max-w-6xl mx-auto px-4 space-y-6">
-            <h2 className="text-2xl md:text-3xl font-semibold text-slate-100">Experience</h2>
-
-            <Reveal><LightCard>
-              <CardHeader>
-                <CardTitle className="text-black">Data Scientist — ATB Financial</CardTitle>
-                <CardDescription className="text-black/70">Jan 2026 – Present • Remote</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2 text-black text-sm">
-                <p>Designed and deployed predictive models using ML and AI to analyze client behavior and assess portfolio-level credit risk.</p>
-                <p>Built and maintained data pipelines for extracting, transforming, and loading structured and unstructured data to support modeling workflows.</p>
-                <p>Conducted stress testing and scenario analysis using Moody's Portfolio Studio, supporting enterprise-wide risk assessment and regulatory exercises.</p>
-                <p>Performed statistical analysis and econometric modeling to evaluate risk signals and inform strategic business decisions.</p>
-              </CardContent>
-            </LightCard></Reveal>
-
-            <Reveal delay={0.1}><LightCard>
-              <CardHeader>
-                <CardTitle className="text-black">Research Assistant — Beedie School of Business (SFU)</CardTitle>
-                <CardDescription className="text-black/70">Sept 2024 – Dec 2024 • Burnaby, BC</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2 text-black text-sm">
-                <p>Built Python + SQL pipelines integrating 1M+ records across exposure, engagement, and outcome datasets to support impact and risk analysis.</p>
-                <p>Developed regression and time-series models to assess lag effects and downstream impacts, informing a 15–20% reallocation toward higher-return scenarios.</p>
-                <p>Designed Power BI dashboards enabling scenario comparison and decision-making, reducing manual analysis time by 30%.</p>
-              </CardContent>
-            </LightCard></Reveal>
-
-            <Reveal delay={0.15}><LightCard>
-              <CardHeader>
-                <CardTitle className="text-black">Data Analyst — UBC Centre for Heart Lung Innovation</CardTitle>
-                <CardDescription className="text-black/70">Sept 2023 – Apr 2024 • Vancouver, BC</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2 text-black text-sm">
-                <p>Analyzed 5,176 participant records using Python and SQL to support multi-site statistical modeling and outcome validation.</p>
-                <p>Implemented data quality and validation checks, reducing missing data and inconsistencies by 40%.</p>
-                <p>Produced publication-grade analytical outputs supporting validated findings for peer-reviewed medical research.</p>
-              </CardContent>
-            </LightCard></Reveal>
-
-            <Reveal delay={0.2}><LightCard>
-              <CardHeader>
-                <CardTitle className="text-black">Research Assistant — Simon Fraser University</CardTitle>
-                <CardDescription className="text-black/70">Apr 2023 – Aug 2023 • Burnaby, BC</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2 text-black text-sm">
-                <p>Prepared and transformed structured datasets using Python and SQL for faculty-led quantitative research.</p>
-                <p>Built reusable preprocessing and validation scripts, reducing data preparation effort by 30%.</p>
-                <p>Conducted exploratory data analysis and supported statistical verification of results.</p>
-              </CardContent>
-            </LightCard></Reveal>
-
-            <Reveal delay={0.25}><LightCard>
-              <CardHeader>
-                <CardTitle className="text-black">AI / ML Intern — Ernst &amp; Young</CardTitle>
-                <CardDescription className="text-black/70">May 2022 – Aug 2022 • Gurugram, India</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2 text-black text-sm">
-                <p>Developed Python-based OCR and data extraction models achieving 95% accuracy.</p>
-                <p>Automated compliance review workflows, reducing processing time by 40%.</p>
-                <p>Translated analytical and regulatory requirements into deployable technical solutions.</p>
-              </CardContent>
-            </LightCard></Reveal>
-          </div>
-        </section>
-
-{/* Projects — mobile-friendly filter chips */}
-<section id="projects" className="scroll-mt-24 py-14 sm:py-20">
-  <div className="max-w-6xl mx-auto px-4">
-    <h2 className="text-2xl md:text-3xl font-semibold text-slate-100 mb-4">Projects</h2>
-
-    {/* Filter bar: visible on mobile, scrollable; sticky under the navbar */}
-    <div className="sticky top-16 z-30 mb-6">
-      <div className="backdrop-blur supports-[backdrop-filter]:bg-slate-900/70 border border-slate-800 rounded-xl p-2">
-        <div
-          className="flex gap-2 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          role="tablist"
-          aria-label="Project categories"
-        >
-          {CATEGORIES.map((c) => (
-            <button
-              key={c}
-              onClick={() => setCat(c)}
-              role="tab"
-              aria-selected={cat === c}
-              className={
-                "shrink-0 rounded-full px-3.5 py-1.5 text-sm border transition " +
-                (cat === c
-                  ? "bg-indigo-600 text-white border-indigo-600"
-                  : "bg-slate-900 text-slate-200 border-slate-700 hover:bg-slate-800")
-              }
-            >
-              <span className="inline-flex items-center gap-2">
-                {/* hide icon on very small screens to save space */}
-                <Filter className="h-3.5 w-3.5 hidden sm:inline" />
-                {c}
-              </span>
-            </button>
-          ))}
-        </div>
+      {/* Ambient blobs */}
+      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute -top-60 left-1/2 -translate-x-1/2 h-[500px] w-[900px] rounded-full bg-gradient-to-r from-fuchsia-600/15 via-indigo-500/15 to-cyan-500/15 blur-3xl" />
+        <div className="absolute top-[60%] -left-40 h-72 w-72 rounded-full bg-indigo-600/10 blur-3xl" />
+        <div className="absolute top-[40%] -right-40 h-72 w-72 rounded-full bg-cyan-600/10 blur-3xl" />
       </div>
-    </div>
 
-    {/* Project cards */}
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <AnimatePresence>
-        {filtered.map((p, i) => (
-          <motion.div
-            key={p.title}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-          >
-            <TiltCard>
-            <LightCard className="overflow-hidden hover:shadow-md transition-shadow">
-              <div className="relative h-40 bg-slate-200">
-                <img
-                  src={p.cover}
-                  alt={`${p.title} cover`}
-                  className="h-full w-full object-cover"
-                  loading={i < 6 ? "eager" : "lazy"}
-                  decoding="async"
-                  fetchPriority={i < 3 ? "high" : "auto"}
-                  onError={(e) => {
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.src = FALLBACK_COVER;
-                  }}
-                />
-                <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/30 to-transparent" />
-              </div>
-              <CardHeader>
-                <CardTitle className="text-lg text-black">{p.title}</CardTitle>
-                <CardDescription className="text-black/70">{p.summary}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3 text-black">
-                <div className="flex flex-wrap gap-2">
-                  {p.tags.map((t) => (
-                    <Badge key={t} className="rounded-full bg-slate-100 border border-slate-300 text-black">
-                      {t}
-                    </Badge>
-                  ))}
-                </div>
-                <p className="text-sm">{p.details}</p>
-                <div className="flex items-center gap-4 pt-2">
-                  {p.links.code !== "#" && (
-                    <a
-                      href={p.links.code}
-                      className="inline-flex items-center gap-2 text-sm text-indigo-700 hover:text-indigo-800 underline-offset-4 hover:underline"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Code <ArrowRight className="h-4 w-4" />
-                    </a>
-                  )}
-                  {p.links.demo !== "#" && (
-                    <a
-                      href={p.links.demo}
-                      className="inline-flex items-center gap-2 text-sm text-indigo-700 hover:text-indigo-800 underline-offset-4 hover:underline"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Live Demo <ArrowRight className="h-4 w-4" />
-                    </a>
-                  )}
-                  {p.links.report !== "#" && (
-                    <a
-                      href={p.links.report}
-                      className="inline-flex items-center gap-2 text-sm text-indigo-700 hover:text-indigo-800 underline-offset-4 hover:underline"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Report <ArrowRight className="h-4 w-4" />
-                    </a>
-                  )}
-                </div>
-              </CardContent>
-            </LightCard>
-            </TiltCard>
-          </motion.div>
-        ))}
-      </AnimatePresence>
-    </div>
-  </div>
-</section>
-
-        {/* Skills (dark chips) */}
-        <section id="skills" className="scroll-mt-24 py-14 sm:py-20">
-          <div className="max-w-6xl mx-auto px-4 grid lg:grid-cols-2 gap-6">
-            <DarkCard>
-              <CardHeader>
-                <CardTitle className="text-slate-100">Core stack</CardTitle>
-                <CardDescription className="text-slate-400">Daily drivers & comfort tools</CardDescription>
-              </CardHeader>
-              <CardContent className="flex flex-wrap gap-2">
-                {[
-                  "Python", "R", "SQL", "Power Bi", "Pandas", "NumPy", "SciPy", "Scikit-learn",
-                  "XGBoost", "Random Forest", "LightGBM", "TensorFlow", "PyTorch", "Statsmodels",
-                  "Prophet", "Power BI", "Tableau", "DBT",
-                  "Airflow", "Spark", "Databricks", "BigQuery", "AWS", "Docker", "Git",
-                ].map((s) => (
-                  <Badge
-                    key={s}
-                    className="rounded-full bg-slate-900 border border-slate-700 text-slate-100 hover:bg-slate-800"
-                  >
-                    {s}
-                  </Badge>
-                ))}
-              </CardContent>
-            </DarkCard>
-
-            <DarkCard>
-              <CardHeader>
-                <CardTitle className="text-slate-100">What I enjoy</CardTitle>
-                <CardDescription className="text-slate-400">Problems I reach for first</CardDescription>
-              </CardHeader>
-              <CardContent className="flex flex-wrap gap-2">
-                {["Causal inference", "Experiment design", "Forecasting", "Cohort analysis", "Segmentation"].map((s) => (
-                  <Badge
-                    key={s}
-                    className="rounded-full bg-slate-900 border border-slate-700 text-slate-100"
-                  >
-                    {s}
-                  </Badge>
-                ))}
-              </CardContent>
-            </DarkCard>
+      {/* Navbar */}
+      <header className="sticky top-0 z-50 backdrop-blur-md bg-slate-950/60 border-b border-white/5">
+        <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+          <a href="#home" className="font-semibold tracking-tight text-indigo-300 shrink-0">
+            {PROFILE.name}
+          </a>
+          <div className="flex items-center gap-5 text-sm overflow-x-auto md:overflow-visible py-1 -mx-2 px-2 grow">
+            {sections.map((id) => (
+              <a
+                key={id}
+                href={`#${id}`}
+                className={"whitespace-nowrap transition-colors " + (active === id ? "text-indigo-300" : "text-slate-400 hover:text-slate-200")}
+              >
+                {id.charAt(0).toUpperCase() + id.slice(1)}
+              </a>
+            ))}
           </div>
-        </section>
-
-{/* Contact — forced light card */}
-<section id="contact" className="scroll-mt-24 py-14 sm:py-20">
-  <div className="max-w-6xl mx-auto px-4">
-    <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-slate-100">Contact</h2>
-    <LightCard>
-      <CardHeader>
-        <CardTitle className="text-black">Let’s work together</CardTitle>
-        <CardDescription className="text-black/70">
-          Send a note and I’ll get back within 1–2 business days.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form className="grid sm:grid-cols-2 gap-4" onSubmit={handleContactSubmit}>
-
-          <Input
-            name="name"
-            placeholder="Your name"
-            required
-            className="bg-white border-slate-300 text-black"
-          />
-          <Input
-            name="email"
-            type="email"
-            placeholder="Your email"
-            required
-            className="bg-white border-slate-300 text-black"
-          />
-          <div className="sm:col-span-2">
-            <Input
-              name="subject"
-              placeholder="Subject"
-              required
-              className="bg-white border-slate-300 text-black"
-            />
-          </div>
-          <div className="sm:col-span-2">
-            <Textarea
-              name="message"
-              placeholder="Message"
-              className="min-h-[120px] bg-white border-slate-300 text-black"
-              required
-            />
-          </div>
-
-          {/* iOS-safe button styling */}
-          <button
-            type="submit"
-            disabled={mailStatus === "sending"}
-            className="sm:col-span-2 rounded-2xl w-full h-11 md:h-12
-                       bg-indigo-600 text-white font-medium
-                       hover:bg-indigo-700 disabled:opacity-70 disabled:cursor-not-allowed
-                       active:translate-y-[1px] transition
-                       focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
-                       focus-visible:ring-offset-2 focus-visible:ring-offset-white
-                       appearance-none [-webkit-appearance:none]"
-            aria-label="Send message"
-          >
-            {mailStatus === "sending" ? "Sending…" : "Send"}
-          </button>
-
-          {/* Success / error messages */}
-          {mailStatus === "sent" && (
-            <p className="sm:col-span-2 text-sm text-emerald-700">
-              Thanks! I’ve received your message.
-            </p>
-          )}
-          {mailStatus === "error" && (
-            <p className="sm:col-span-2 text-sm text-red-600">Something went wrong. Please email me directly.</p>
-          )}
-
-          <p className="sm:col-span-2 text-xs text-black">
-            Or email me directly at{" "}
-            <a className="underline text-black" href={`mailto:${PROFILE.email}`}>
-              {PROFILE.email}
+          <div className="shrink-0">
+            <a href={PROFILE.socials.resume} target="_blank" rel="noreferrer">
+              <Button className="rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white border-0 px-3 sm:px-4 gap-2">
+                <FileDown className="h-4 w-4" />
+                <span className="hidden sm:inline">Resume</span>
+              </Button>
             </a>
-            .
-          </p>
-        </form>
-      </CardContent>
-    </LightCard>
-  </div>
-</section>
+          </div>
+        </nav>
+      </header>
 
-        {/* Footer */}
-        <footer className="py-10 border-t border-slate-800">
-          <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-slate-400">© {new Date().getFullYear()} {PROFILE.name}. All rights reserved.</p>
-            <div className="flex items-center gap-3">
-              <a href={PROFILE.socials.github} className="hover:opacity-80 text-slate-200" aria-label="GitHub">
-                <Github className="h-5 w-5" />
+      {/* ── Hero ── */}
+      <section id="home" className="scroll-mt-24 py-20 sm:py-32 relative overflow-hidden">
+        <HeroCanvas />
+        <div className="max-w-6xl mx-auto px-4 relative z-10">
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+
+            {/* ATB badge */}
+            <div className="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-4 py-1.5 text-sm text-indigo-300 mb-6">
+              <Briefcase className="h-3.5 w-3.5" />
+              Currently: Data Scientist @ ATB Financial
+            </div>
+
+            <h1 className="text-4xl sm:text-6xl font-bold leading-tight tracking-tight">
+              Hi, I'm <span className="bg-gradient-to-r from-indigo-400 via-cyan-400 to-fuchsia-400 bg-clip-text text-transparent">{PROFILE.name}</span>
+            </h1>
+
+            {/* rotating subtitle */}
+            <div className="h-9 mt-3">
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={PROFILE.roleWords[wordIndex]}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.25 }}
+                  className="text-xl text-slate-300"
+                >
+                  {PROFILE.roleWords[wordIndex]}
+                </motion.p>
+              </AnimatePresence>
+            </div>
+
+            <p className="mt-4 text-slate-400 max-w-xl text-lg">{PROFILE.blurb}</p>
+
+            {/* CTA buttons */}
+            <div className="mt-7 flex flex-wrap gap-3">
+              <a href={PROFILE.socials.github} target="_blank" rel="noreferrer">
+                <Button className="rounded-xl bg-white/5 border border-white/10 text-slate-100 hover:bg-white/10 gap-2">
+                  <Github className="h-4 w-4" /> GitHub
+                </Button>
               </a>
-              <a href={PROFILE.socials.linkedin} className="hover:opacity-80 text-cyan-300" aria-label="LinkedIn">
-                <Linkedin className="h-5 w-5" />
+              <a href={PROFILE.socials.linkedin} target="_blank" rel="noreferrer">
+                <Button className="rounded-xl bg-white/5 border border-white/10 text-cyan-300 hover:bg-white/10 gap-2">
+                  <Linkedin className="h-4 w-4" /> LinkedIn
+                </Button>
               </a>
-              <a href={`mailto:${PROFILE.email}`} className="hover:opacity-80 text-fuchsia-300" aria-label="Email">
-                <Mail className="h-5 w-5" />
+              <a href={`mailto:${PROFILE.email}`}>
+                <Button className="rounded-xl bg-white/5 border border-white/10 text-fuchsia-300 hover:bg-white/10 gap-2">
+                  <Mail className="h-4 w-4" /> Email
+                </Button>
               </a>
             </div>
+
+            {/* Impact stats */}
+            <div className="mt-10 flex flex-wrap gap-6">
+              {HERO_STATS.map((s) => (
+                <div key={s.label} className="flex flex-col">
+                  <span className="text-2xl font-bold text-indigo-300">{s.value}</span>
+                  <span className="text-xs text-slate-500 uppercase tracking-wide">{s.label}</span>
+                </div>
+              ))}
+            </div>
+
+            <a href="#projects" className="group mt-10 inline-flex items-center gap-2 text-sm text-slate-400 hover:text-indigo-300 transition-colors">
+              See my work <ChevronDown className="h-4 w-4 group-hover:translate-y-0.5 transition-transform" />
+            </a>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── About ── */}
+      <section id="about" className="scroll-mt-24 py-14 sm:py-20">
+        <div className="max-w-6xl mx-auto px-4 grid lg:grid-cols-2 gap-8 items-start">
+
+          <Reveal>
+            <div>
+              <h2 className="text-2xl md:text-3xl font-semibold mb-4">About</h2>
+              <div className="space-y-4 text-slate-400 leading-relaxed">
+                <p>
+                  I'm a Data Scientist at <span className="text-slate-200 font-medium">ATB Financial</span>, based in Calgary, AB — an SFU graduate (BSc Data Science, 2025) with an IBM Data Science Professional Certificate.
+                </p>
+                <p>
+                  I design and deploy end-to-end data pipelines and predictive models using Python and SQL to evaluate downstream impacts and risk drivers. My work spans applied econometrics, forecasting, and scenario analysis to support portfolio-level and operational risk decisions.
+                </p>
+                <p>
+                  I translate complex analytical outputs into actionable insights — through Power BI dashboards, regression outputs, or stress-testing frameworks. As an executive of the SFU Data Science Student Club, I mentored <span className="text-slate-200 font-medium">60+ students</span> on model selection, analytical reasoning, and technical communication.
+                </p>
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <GlassCard className="p-6 space-y-5">
+              <div>
+                <p className="text-xs uppercase tracking-widest text-indigo-400 mb-3">Education</p>
+                <div className="space-y-4">
+                  <div>
+                    <p className="font-semibold text-slate-100">Simon Fraser University</p>
+                    <p className="text-sm text-indigo-300">BSc, Data Science</p>
+                    <p className="text-xs text-slate-500 mt-0.5">Jan 2021 – Apr 2025 · Burnaby, BC</p>
+                    <ul className="mt-2 text-sm text-slate-400 space-y-1 list-disc pl-4">
+                      <li>Statistics, ML, Data Mining, Algorithms</li>
+                      <li>Databases, Data Engineering, Cloud (AWS/GCP)</li>
+                      <li>Capstone: BCMEA Labour Forecasting — 7.45% MAPE</li>
+                    </ul>
+                  </div>
+                  <div className="border-t border-white/5 pt-4">
+                    <p className="font-semibold text-slate-100">IBM Data Science Professional Certificate</p>
+                    <p className="text-xs text-slate-500 mt-0.5">Completed Oct 2025</p>
+                  </div>
+                  <div className="border-t border-white/5 pt-4">
+                    <p className="font-semibold text-slate-100">Executive — SFU Data Science Student Club</p>
+                    <p className="text-xs text-slate-500 mt-0.5">Apr 2024 – Apr 2025</p>
+                    <p className="text-sm text-slate-400 mt-1">Mentored 60+ students · Led Python/SQL/ML workshops</p>
+                  </div>
+                </div>
+              </div>
+            </GlassCard>
+          </Reveal>
+
+        </div>
+      </section>
+
+      {/* ── Experience ── */}
+      <section id="experience" className="scroll-mt-24 py-14 sm:py-20">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-semibold mb-8">Experience</h2>
+          <div className="space-y-4">
+
+            {[
+              {
+                role: "Data Scientist",
+                company: "ATB Financial",
+                period: "Jan 2026 – Present",
+                location: "Remote",
+                accent: "text-indigo-300",
+                bullets: [
+                  "Designed and deployed predictive models using ML and AI to analyze client behavior and assess portfolio-level credit risk.",
+                  "Built and maintained data pipelines for extracting, transforming, and loading structured and unstructured data.",
+                  <span>Conducted <strong className="text-slate-200">stress testing and scenario analysis</strong> using Moody's Portfolio Studio for enterprise-wide risk assessment.</span>,
+                  "Performed statistical analysis and econometric modeling to evaluate risk signals and inform strategic business decisions.",
+                ],
+              },
+              {
+                role: "Research Assistant",
+                company: "Beedie School of Business, SFU",
+                period: "Sept 2024 – Dec 2024",
+                location: "Burnaby, BC",
+                accent: "text-cyan-300",
+                bullets: [
+                  <span>Built Python + SQL pipelines integrating <strong className="text-slate-200">1M+ records</strong> to support impact and risk analysis.</span>,
+                  <span>Regression and time-series models informed a <strong className="text-slate-200">15–20% reallocation</strong> toward higher-return scenarios.</span>,
+                  <span>Designed Power BI dashboards reducing manual analysis time by <strong className="text-slate-200">30%</strong>.</span>,
+                ],
+              },
+              {
+                role: "Data Analyst",
+                company: "UBC Centre for Heart Lung Innovation",
+                period: "Sept 2023 – Apr 2024",
+                location: "Vancouver, BC",
+                accent: "text-fuchsia-300",
+                bullets: [
+                  <span>Analyzed <strong className="text-slate-200">5,176 participant records</strong> using Python and SQL for multi-site statistical modeling.</span>,
+                  <span>Data quality checks reduced missing data and inconsistencies by <strong className="text-slate-200">40%</strong>.</span>,
+                  "Produced publication-grade analytical outputs for peer-reviewed medical research.",
+                ],
+              },
+              {
+                role: "Research Assistant",
+                company: "Simon Fraser University",
+                period: "Apr 2023 – Aug 2023",
+                location: "Burnaby, BC",
+                accent: "text-indigo-300",
+                bullets: [
+                  "Prepared and transformed structured datasets using Python and SQL for faculty-led quantitative research.",
+                  <span>Reusable preprocessing scripts reduced data preparation effort by <strong className="text-slate-200">30%</strong>.</span>,
+                  "Conducted EDA and supported statistical verification of results.",
+                ],
+              },
+              {
+                role: "AI / ML Intern",
+                company: "Ernst & Young",
+                period: "May 2022 – Aug 2022",
+                location: "Gurugram, India",
+                accent: "text-cyan-300",
+                bullets: [
+                  <span>Python-based OCR and data extraction models achieving <strong className="text-slate-200">95% accuracy</strong>.</span>,
+                  <span>Automated compliance workflows, reducing processing time by <strong className="text-slate-200">40%</strong>.</span>,
+                  "Translated analytical and regulatory requirements into deployable technical solutions.",
+                ],
+              },
+            ].map((exp, i) => (
+              <Reveal key={exp.company + exp.role} delay={i * 0.05}>
+                <GlassCard className="p-6 hover:border-white/20 transition-colors">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 mb-3">
+                    <div>
+                      <p className="font-semibold text-slate-100 text-lg">{exp.role}</p>
+                      <p className={`text-sm font-medium ${exp.accent}`}>{exp.company}</p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-xs text-slate-400">{exp.period}</p>
+                      <p className="text-xs text-slate-500">{exp.location}</p>
+                    </div>
+                  </div>
+                  <ul className="space-y-1.5 text-sm text-slate-400">
+                    {exp.bullets.map((b, j) => (
+                      <li key={j} className="flex gap-2">
+                        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-indigo-500/60 shrink-0" />
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </GlassCard>
+              </Reveal>
+            ))}
+
           </div>
-        </footer>
-      </div>
+        </div>
+      </section>
+
+      {/* ── Projects ── */}
+      <section id="projects" className="scroll-mt-24 py-14 sm:py-20">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-semibold mb-4">Projects</h2>
+
+          {/* Filter bar */}
+          <div className="sticky top-16 z-30 mb-6">
+            <div className="backdrop-blur-md bg-slate-950/60 border border-white/5 rounded-xl p-2">
+              <div className="flex gap-2 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" role="tablist">
+                {CATEGORIES.map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => setCat(c)}
+                    role="tab"
+                    aria-selected={cat === c}
+                    className={
+                      "shrink-0 rounded-full px-3.5 py-1.5 text-sm border transition " +
+                      (cat === c
+                        ? "bg-indigo-600 text-white border-indigo-600"
+                        : "bg-white/5 text-slate-300 border-white/10 hover:bg-white/10")
+                    }
+                  >
+                    <span className="inline-flex items-center gap-1.5">
+                      <Filter className="h-3 w-3 hidden sm:inline opacity-60" />
+                      {c}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <AnimatePresence>
+              {filtered.map((p, i) => (
+                <motion.div
+                  key={p.title}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <TiltCard>
+                    <GlassCard className="overflow-hidden hover:border-white/20 transition-colors h-full flex flex-col">
+                      {/* Cover image + metric badge */}
+                      <div className="relative h-40">
+                        <img
+                          src={p.cover}
+                          alt={p.title}
+                          className="h-full w-full object-cover"
+                          loading={i < 6 ? "eager" : "lazy"}
+                          decoding="async"
+                          onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = FALLBACK_COVER; }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
+                        {p.metric && (
+                          <span className="absolute top-3 right-3 rounded-full bg-indigo-600/90 backdrop-blur-sm px-2.5 py-0.5 text-xs font-semibold text-white">
+                            {p.metric}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Content */}
+                      <div className="p-5 flex flex-col gap-3 flex-1">
+                        <div>
+                          <p className="font-semibold text-slate-100">{p.title}</p>
+                          <p className="text-sm text-slate-400 mt-1">{p.summary}</p>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {p.tags.map((t) => (
+                            <Badge key={t} className="rounded-full bg-white/5 border border-white/10 text-slate-300 text-xs">
+                              {t}
+                            </Badge>
+                          ))}
+                        </div>
+                        <p className="text-xs text-slate-500 flex-1">{p.details}</p>
+                        <div className="flex items-center gap-4 pt-1">
+                          {p.links.code !== "#" && (
+                            <a href={p.links.code} target="_blank" rel="noreferrer"
+                              className="inline-flex items-center gap-1 text-sm text-indigo-400 hover:text-indigo-300 transition-colors">
+                              Code <ArrowRight className="h-3.5 w-3.5" />
+                            </a>
+                          )}
+                          {p.links.demo !== "#" && (
+                            <a href={p.links.demo} target="_blank" rel="noreferrer"
+                              className="inline-flex items-center gap-1 text-sm text-indigo-400 hover:text-indigo-300 transition-colors">
+                              Demo <ArrowRight className="h-3.5 w-3.5" />
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </GlassCard>
+                  </TiltCard>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Skills ── */}
+      <section id="skills" className="scroll-mt-24 py-14 sm:py-20">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-semibold mb-8">Skills</h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {SKILLS.map((group, i) => (
+              <Reveal key={group.label} delay={i * 0.08}>
+                <GlassCard className="p-5 h-full">
+                  <p className="text-xs uppercase tracking-widest text-indigo-400 mb-3">{group.label}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {group.items.map((s) => (
+                      <Badge key={s} className="rounded-full bg-white/5 border border-white/10 text-slate-200 hover:bg-white/10 transition-colors">
+                        {s}
+                      </Badge>
+                    ))}
+                  </div>
+                </GlassCard>
+              </Reveal>
+            ))}
+          </div>
+
+          {/* Interests strip */}
+          <Reveal delay={0.15}>
+            <GlassCard className="mt-4 p-5">
+              <p className="text-xs uppercase tracking-widest text-indigo-400 mb-3">What I Enjoy</p>
+              <div className="flex flex-wrap gap-2">
+                {["Causal inference", "Experiment design", "Forecasting", "Cohort analysis", "Segmentation", "Stress testing", "Scenario analysis"].map((s) => (
+                  <Badge key={s} className="rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300">
+                    {s}
+                  </Badge>
+                ))}
+              </div>
+            </GlassCard>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ── Contact ── */}
+      <section id="contact" className="scroll-mt-24 py-14 sm:py-20">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-semibold mb-6">Contact</h2>
+          <GlassCard className="p-6 sm:p-8 max-w-2xl">
+            <p className="font-semibold text-slate-100 text-lg">Let's work together</p>
+            <p className="text-sm text-slate-400 mt-1 mb-6">Send a note and I'll get back within 1–2 business days.</p>
+            <form className="grid sm:grid-cols-2 gap-4" onSubmit={handleContactSubmit}>
+              <Input name="name" placeholder="Your name" required
+                className="bg-white/5 border-white/10 text-slate-100 placeholder:text-slate-500" />
+              <Input name="email" type="email" placeholder="Your email" required
+                className="bg-white/5 border-white/10 text-slate-100 placeholder:text-slate-500" />
+              <div className="sm:col-span-2">
+                <Input name="subject" placeholder="Subject" required
+                  className="bg-white/5 border-white/10 text-slate-100 placeholder:text-slate-500" />
+              </div>
+              <div className="sm:col-span-2">
+                <Textarea name="message" placeholder="Message" required
+                  className="min-h-[120px] bg-white/5 border-white/10 text-slate-100 placeholder:text-slate-500" />
+              </div>
+              <button
+                type="submit"
+                disabled={mailStatus === "sending"}
+                className="sm:col-span-2 rounded-xl w-full h-11 bg-indigo-600 text-white font-medium hover:bg-indigo-500 disabled:opacity-60 disabled:cursor-not-allowed transition appearance-none [-webkit-appearance:none]"
+              >
+                {mailStatus === "sending" ? "Sending…" : "Send Message"}
+              </button>
+              {mailStatus === "sent" && (
+                <p className="sm:col-span-2 text-sm text-emerald-400">Thanks! I've received your message.</p>
+              )}
+              {mailStatus === "error" && (
+                <p className="sm:col-span-2 text-sm text-red-400">Something went wrong. Email me directly at {PROFILE.email}</p>
+              )}
+              <p className="sm:col-span-2 text-xs text-slate-500">
+                Or email directly at <a className="underline text-slate-400" href={`mailto:${PROFILE.email}`}>{PROFILE.email}</a>
+              </p>
+            </form>
+          </GlassCard>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-10 border-t border-white/5">
+        <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-slate-500">© {new Date().getFullYear()} {PROFILE.name}. All rights reserved.</p>
+          <div className="flex items-center gap-4">
+            <a href={PROFILE.socials.github} className="text-slate-400 hover:text-slate-200 transition-colors" aria-label="GitHub">
+              <Github className="h-5 w-5" />
+            </a>
+            <a href={PROFILE.socials.linkedin} className="text-slate-400 hover:text-cyan-300 transition-colors" aria-label="LinkedIn">
+              <Linkedin className="h-5 w-5" />
+            </a>
+            <a href={`mailto:${PROFILE.email}`} className="text-slate-400 hover:text-fuchsia-300 transition-colors" aria-label="Email">
+              <Mail className="h-5 w-5" />
+            </a>
+          </div>
+        </div>
+      </footer>
+
     </div>
   );
 }
