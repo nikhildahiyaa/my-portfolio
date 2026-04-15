@@ -341,9 +341,17 @@ export default function Portfolio() {
               Currently: Data Scientist @ ATB Financial
             </div>
 
-            <h1 className="text-4xl sm:text-6xl font-bold leading-tight tracking-tight">
-              Hi, I'm <span className="bg-gradient-to-r from-indigo-400 via-cyan-400 to-fuchsia-400 bg-clip-text text-transparent">{PROFILE.name}</span>
-            </h1>
+            {/* Name + avatar row */}
+            <div className="flex items-center gap-5 mb-1">
+              <h1 className="text-4xl sm:text-6xl font-bold leading-tight tracking-tight">
+                Hi, I'm <span className="bg-gradient-to-r from-indigo-400 via-cyan-400 to-fuchsia-400 bg-clip-text text-transparent">{PROFILE.name}</span>
+              </h1>
+              <img
+                src="/IMG_9302.jpg"
+                alt="Nikhil Dahiya"
+                className="h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover object-top shrink-0 ring-2 ring-white/10"
+              />
+            </div>
 
             {/* rotating subtitle */}
             <div className="h-9 mt-3">
