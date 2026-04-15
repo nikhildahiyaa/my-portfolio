@@ -668,19 +668,6 @@ export default function Portfolio() {
             ))}
           </div>
 
-          {/* Interests strip */}
-          <Reveal delay={0.15}>
-            <GlassCard className="mt-4 p-5">
-              <p className="text-xs uppercase tracking-widest text-indigo-400 mb-3">What I Enjoy</p>
-              <div className="flex flex-wrap gap-2">
-                {["Causal inference", "Experiment design", "Forecasting", "Cohort analysis", "Segmentation", "Stress testing", "Scenario analysis"].map((s) => (
-                  <Badge key={s} className="rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300">
-                    {s}
-                  </Badge>
-                ))}
-              </div>
-            </GlassCard>
-          </Reveal>
         </div>
       </section>
 
