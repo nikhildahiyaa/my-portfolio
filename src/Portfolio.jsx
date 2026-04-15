@@ -760,6 +760,9 @@ export default function Portfolio() {
             <a href={PROFILE.socials.linkedin} className="text-slate-400 hover:text-cyan-300 transition-colors" aria-label="LinkedIn">
               <Linkedin className="h-5 w-5" />
             </a>
+            <a href={`mailto:${PROFILE.email}`} className="text-slate-400 hover:text-fuchsia-300 transition-colors text-sm">
+              {PROFILE.email}
+            </a>
             <a href={`mailto:${PROFILE.email}`} className="text-slate-400 hover:text-fuchsia-300 transition-colors" aria-label="Email">
               <Mail className="h-5 w-5" />
             </a>
