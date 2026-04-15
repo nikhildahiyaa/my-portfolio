@@ -34,7 +34,7 @@ const PROFILE = {
   /* location: "Canada",*/
   photo: "/avatar.jpg",
   blurb:
-    "Data Analyst with experience in forecasting, A/B testing, and BI. I turn messy datasets into clear insights and operational wins.",
+    "Data Scientist with 2+ years of experience building predictive models, risk-focused analytics, and data pipelines that support scenario analysis, stress testing, and data-driven decision-making.",
   email: "dahiya5166@gmail.com",
   socials: {
     github: "https://github.com/nikhildahiyaa",
@@ -489,27 +489,25 @@ async function handleContactSubmit(e) {
 
   <div className="space-y-4 text-slate-300">
     <p>
-      I’m 👋 — a recent graduate from Simon Fraser University with a strong academic foundation and hands-on experience in data
-      science and analytics.
+      I’m a Data Scientist at ATB Financial, based in Calgary, AB — a Simon Fraser University
+      graduate (BSc Data Science, 2025) with an IBM Data Science Professional Certificate.
     </p>
 
     <p>
-      Throughout my studies, I didn’t just learn concepts in the classroom — I applied them on real
-      projects. From building forecasting models for maritime labor demand to predicting Airbnb
-      bookings and analyzing box-office trends, I love turning data into meaningful insights.
+      I design and deploy end-to-end data pipelines and predictive models using Python and SQL
+      to evaluate downstream impacts and risk drivers. My work spans applied econometrics,
+      forecasting, and scenario analysis to support portfolio-level and operational risk decisions.
     </p>
 
     <p>
-      At this stage in my career, I’m excited to step into the professional world to learn, grow,
-      and contribute to a team where collaboration and curiosity are valued. Technical skills matter,
-      but I also value teamwork, adaptability, and clear communication — I’m flexible, approachable,
-      and easy to work with.
+      I’m experienced in translating complex analytical outputs into actionable insights for both
+      technical and non-technical stakeholders — whether through Power BI dashboards, regression
+      outputs, or stress-testing frameworks. I’ve also led and mentored 60+ students as an executive
+      of the SFU Data Science Student Club.
     </p>
 
     <p>
-      I’m open to roles across data science, analytics, and BI where I can make an impact, learn
-      from teammates and mentors, and build thoughtful solutions. You can explore more of my work
-      in the <a href="#projects" className="underline text-indigo-300">Projects</a> section, or view this site at{" "}
+      Explore my work in the <a href="#projects" className="underline text-indigo-300">Projects</a> section, or view this site at{" "}
       <a
         href="https://nikhil-dahiya-portfolio.vercel.app"
         target="_blank"
@@ -536,8 +534,12 @@ async function handleContactSubmit(e) {
                   <ul className="mt-2 list-disc pl-5 text-sm space-y-1">
                     <li>Statistics, Machine Learning, Data Mining, Algorithms</li>
                     <li>Databases (SQL/NoSQL), Data Engineering, Cloud (AWS/GCP)</li>
-                    <li>Projects: labour demand forecasting, customer analytics</li>
+                    <li>Capstone: BCMEA Labour Demand Forecasting (7.45% MAPE)</li>
                   </ul>
+                </div>
+                <div className="pt-1">
+                  <p className="font-semibold">IBM Data Science Professional Certificate</p>
+                  <p className="text-sm text-black/80">Completed Oct 2025</p>
                 </div>
               </CardContent>
             </LightCard></Reveal>
@@ -551,35 +553,62 @@ async function handleContactSubmit(e) {
 
             <Reveal><LightCard>
               <CardHeader>
-                <CardTitle className="text-black">Research Assistant — Beedie School of Business (SFU)</CardTitle>
-                <CardDescription className="text-black/70">Sept 2024 – Dec 2024 • Burnaby, BC</CardDescription>
+                <CardTitle className="text-black">Data Scientist — ATB Financial</CardTitle>
+                <CardDescription className="text-black/70">Jan 2026 – Present • Remote</CardDescription>
               </CardHeader>
               <CardContent className="space-y-2 text-black text-sm">
-                <p>Consolidated 1M+ ratings, ad records, and box office data with Python ETL.</p>
-                <p>Time-series & lag regressions; early-week ads showed ~15% stronger weekend impact.</p>
-                <p>Develop dashboards in Power BI, reallocating ~20% of ad spend to high-ROI period</p>
+                <p>Designed and deployed predictive models using ML and AI to analyze client behavior and assess portfolio-level credit risk.</p>
+                <p>Built and maintained data pipelines for extracting, transforming, and loading structured and unstructured data to support modeling workflows.</p>
+                <p>Conducted stress testing and scenario analysis using Moody's Portfolio Studio, supporting enterprise-wide risk assessment and regulatory exercises.</p>
+                <p>Performed statistical analysis and econometric modeling to evaluate risk signals and inform strategic business decisions.</p>
               </CardContent>
             </LightCard></Reveal>
 
             <Reveal delay={0.1}><LightCard>
               <CardHeader>
+                <CardTitle className="text-black">Research Assistant — Beedie School of Business (SFU)</CardTitle>
+                <CardDescription className="text-black/70">Sept 2024 – Dec 2024 • Burnaby, BC</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2 text-black text-sm">
+                <p>Built Python + SQL pipelines integrating 1M+ records across exposure, engagement, and outcome datasets to support impact and risk analysis.</p>
+                <p>Developed regression and time-series models to assess lag effects and downstream impacts, informing a 15–20% reallocation toward higher-return scenarios.</p>
+                <p>Designed Power BI dashboards enabling scenario comparison and decision-making, reducing manual analysis time by 30%.</p>
+              </CardContent>
+            </LightCard></Reveal>
+
+            <Reveal delay={0.15}><LightCard>
+              <CardHeader>
                 <CardTitle className="text-black">Data Analyst — UBC Centre for Heart Lung Innovation</CardTitle>
                 <CardDescription className="text-black/70">Sept 2023 – Apr 2024 • Vancouver, BC</CardDescription>
               </CardHeader>
               <CardContent className="space-y-2 text-black text-sm">
-                <p>Analyzed national cohort (5,176 participants) with SAS/STATA; logistic regressions & meta-analysis.</p>
-                <p>Found asbestos exposure associated with chronic cough (OR≈1.8, p&lt;0.01); consistent effects across 7/9 sites.</p>
+                <p>Analyzed 5,176 participant records using Python and SQL to support multi-site statistical modeling and outcome validation.</p>
+                <p>Implemented data quality and validation checks, reducing missing data and inconsistencies by 40%.</p>
+                <p>Produced publication-grade analytical outputs supporting validated findings for peer-reviewed medical research.</p>
               </CardContent>
             </LightCard></Reveal>
 
             <Reveal delay={0.2}><LightCard>
               <CardHeader>
-                <CardTitle className="text-black">AI/ML Intern — Ernst &amp; Young</CardTitle>
+                <CardTitle className="text-black">Research Assistant — Simon Fraser University</CardTitle>
+                <CardDescription className="text-black/70">Apr 2023 – Aug 2023 • Burnaby, BC</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2 text-black text-sm">
+                <p>Prepared and transformed structured datasets using Python and SQL for faculty-led quantitative research.</p>
+                <p>Built reusable preprocessing and validation scripts, reducing data preparation effort by 30%.</p>
+                <p>Conducted exploratory data analysis and supported statistical verification of results.</p>
+              </CardContent>
+            </LightCard></Reveal>
+
+            <Reveal delay={0.25}><LightCard>
+              <CardHeader>
+                <CardTitle className="text-black">AI / ML Intern — Ernst &amp; Young</CardTitle>
                 <CardDescription className="text-black/70">May 2022 – Aug 2022 • Gurugram, India</CardDescription>
               </CardHeader>
               <CardContent className="space-y-2 text-black text-sm">
-                <p>Built OpenCV + EasyOCR redaction tool (regex-enhanced); ~95% ID detection accuracy.</p>
-                <p>Interactive GUI; reduced processing time by ~40% and improved privacy compliance.</p>
+                <p>Developed Python-based OCR and data extraction models achieving 95% accuracy.</p>
+                <p>Automated compliance review workflows, reducing processing time by 40%.</p>
+                <p>Translated analytical and regulatory requirements into deployable technical solutions.</p>
               </CardContent>
             </LightCard></Reveal>
           </div>
