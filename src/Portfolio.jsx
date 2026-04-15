@@ -413,7 +413,7 @@ export default function Portfolio() {
                     <Briefcase className="h-3 w-3" />
                     Data Scientist @ ATB Financial
                   </div>
-                  <p className="text-sm text-slate-400">Calgary, AB, Canada</p>
+                  <p className="text-sm text-slate-400">Vancouver, BC, Canada</p>
                   <div className="border-t border-white/5 pt-3 flex justify-center gap-4">
                     <a href={PROFILE.socials.github} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-slate-200 transition-colors">
                       <Github className="h-5 w-5" />
