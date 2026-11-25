@@ -2,49 +2,99 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1"
-    />
-    <title>Nikhil Dahiya Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Consistent colors and platform chrome -->
+    <!-- Primary SEO -->
+    <title>Nikhil Dahiya | Data Science, Credit Risk &amp; Analytics</title>
+    <meta
+      name="description"
+      content="Data Science portfolio featuring professional experience in credit risk analytics, predictive modelling, data engineering, business intelligence and intelligent automation."
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://nikhildahiya.vercel.app/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://nikhildahiya.vercel.app/" />
+    <meta property="og:title" content="Nikhil Dahiya | Data Science, Credit Risk &amp; Analytics" />
+    <meta
+      property="og:description"
+      content="Data Science portfolio featuring professional experience in credit risk analytics, predictive modelling, data engineering, business intelligence and intelligent automation."
+    />
+    <meta property="og:image" content="https://nikhildahiya.vercel.app/IMG_9302.jpg" />
+    <meta property="og:locale" content="en_CA" />
+    <meta property="og:site_name" content="Nikhil Dahiya Portfolio" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://nikhildahiya.vercel.app/" />
+    <meta name="twitter:title" content="Nikhil Dahiya | Data Science, Credit Risk &amp; Analytics" />
+    <meta
+      name="twitter:description"
+      content="Data Science portfolio featuring professional experience in credit risk analytics, predictive modelling, data engineering, business intelligence and intelligent automation."
+    />
+    <meta name="twitter:image" content="https://nikhildahiya.vercel.app/IMG_9302.jpg" />
+
+    <!-- Platform chrome -->
     <meta name="theme-color" content="#0b1220" />
-    <meta name="color-scheme" content="dark light" />
+    <meta name="color-scheme" content="dark" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-    <!-- Lock a single web font everywhere -->
+    <!-- Keywords (supplementary — not used by Google for ranking, but helpful for other engines) -->
+    <meta
+      name="keywords"
+      content="data scientist, data analyst, credit risk analytics, machine learning, predictive modelling, data engineering, business intelligence, Python, SQL, Nikhil Dahiya"
+    />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Web font -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Structured data: Person -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Nikhil Dahiya",
+        "url": "https://nikhildahiya.vercel.app/",
+        "sameAs": [
+          "https://github.com/nikhildahiyaa",
+          "https://www.linkedin.com/in/nikhil-dahiya/"
+        ],
+        "alumniOf": {
+          "@type": "CollegeOrUniversity",
+          "name": "Simon Fraser University"
+        },
+        "knowsAbout": [
+          "Data Science",
+          "Credit Risk Analytics",
+          "Machine Learning",
+          "Data Engineering",
+          "Business Intelligence"
+        ]
+      }
+    </script>
 
     <style>
       :root { color-scheme: dark; }
       html, body, #root { height: 100%; }
-
-      /* Stop iPhone Safari from auto-bumping text sizes */
       html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-
-      /* Use the same font + smoothing on all platforms */
       body {
         font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
-                     "Helvetica Neue", Arial, "Noto Sans", sans-serif,
-                     "Apple Color Emoji", "Segoe UI Emoji";
+                     "Helvetica Neue", Arial, "Noto Sans", sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        background-color: #0b1220; /* matches your site’s dark bg */
+        background-color: #020617;
       }
     </style>
-
-    <!-- Tailwind CDN with dark mode -->
-    <script>
-      tailwind = { config: { darkMode: 'class' } }
-    </script>
-    <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="antialiased">
     <div id="root"></div>

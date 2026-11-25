@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 
-/* Floating CSS wireframe shapes */
 const SHAPES = [
   { size: 90,  top: "12%", left: "8%",  delay: "0s",   dur: "9s",  color: "#818cf8", clip: "polygon(50% 0%, 0% 100%, 100% 100%)" },
   { size: 70,  top: "60%", left: "5%",  delay: "2s",   dur: "11s", color: "#22d3ee", clip: "polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%)" },
@@ -10,19 +9,21 @@ const SHAPES = [
   { size: 60,  top: "80%", left: "30%", delay: "4s",   dur: "12s", color: "#e879f9", clip: "polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%)" },
 ];
 
-function FloatingShapes() {
+function FloatingShapes({ reduced }) {
+  if (reduced) return null;
   return (
     <>
       <style>{`
         @keyframes floatShape {
-          0%   { transform: translateY(0px) rotate(0deg);   opacity: 0.18; }
-          50%  { transform: translateY(-22px) rotate(180deg); opacity: 0.28; }
-          100% { transform: translateY(0px) rotate(360deg); opacity: 0.18; }
+          0%   { transform: translateY(0px) rotate(0deg);    opacity: 0.14; }
+          50%  { transform: translateY(-18px) rotate(180deg);opacity: 0.22; }
+          100% { transform: translateY(0px) rotate(360deg);  opacity: 0.14; }
         }
       `}</style>
       {SHAPES.map((s, i) => (
         <div
           key={i}
+          aria-hidden="true"
           style={{
             position: "absolute",
             width: s.size,
@@ -41,20 +42,27 @@ function FloatingShapes() {
   );
 }
 
-/* Canvas 2D particle network */
 export default function HeroCanvas() {
   const canvasRef = useRef(null);
+
+  // Detect reduced-motion preference once at mount
+  const prefersReduced =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d");
+    if (prefersReduced) return; // Skip canvas animation entirely
 
+    const ctx = canvas.getContext("2d");
     const COLORS = ["#818cf8", "#22d3ee", "#e879f9"];
-    const COUNT = 70;
+    // Reduce particle count on mobile to improve performance
+    const COUNT = window.innerWidth < 640 ? 32 : 65;
     let particles = [];
     let animId;
     let mouse = { x: -9999, y: -9999 };
+    let running = true;
 
     function resize() {
       canvas.width  = canvas.offsetWidth;
@@ -73,9 +81,10 @@ export default function HeroCanvas() {
     }
 
     function draw() {
+      if (!running) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      /* connections */
+      // Connections
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
@@ -83,7 +92,7 @@ export default function HeroCanvas() {
           const d  = Math.sqrt(dx * dx + dy * dy);
           if (d < 130) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(129,140,248,${(1 - d / 130) * 0.35})`;
+            ctx.strokeStyle = `rgba(129,140,248,${(1 - d / 130) * 0.3})`;
             ctx.lineWidth = 0.8;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
@@ -92,33 +101,33 @@ export default function HeroCanvas() {
         }
       }
 
-      /* particles */
+      // Particles
       for (const p of particles) {
-        /* subtle mouse repulsion */
+        // Mouse repulsion — guard against d === 0
         const dx = p.x - mouse.x;
         const dy = p.y - mouse.y;
         const d  = Math.sqrt(dx * dx + dy * dy);
-        if (d < 100) {
+        if (d < 100 && d > 0) {
           p.vx += (dx / d) * 0.08;
           p.vy += (dy / d) * 0.08;
         }
 
-        /* speed cap */
+        // Speed cap
         const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
         if (speed > 1.5) { p.vx *= 0.95; p.vy *= 0.95; }
 
         p.x += p.vx;
         p.y += p.vy;
 
-        if (p.x < 0) { p.x = 0; p.vx *= -1; }
-        if (p.x > canvas.width)  { p.x = canvas.width;  p.vx *= -1; }
-        if (p.y < 0) { p.y = 0; p.vy *= -1; }
-        if (p.y > canvas.height) { p.y = canvas.height; p.vy *= -1; }
+        if (p.x < 0)            { p.x = 0;             p.vx *= -1; }
+        if (p.x > canvas.width) { p.x = canvas.width;  p.vx *= -1; }
+        if (p.y < 0)            { p.y = 0;             p.vy *= -1; }
+        if (p.y > canvas.height){ p.y = canvas.height; p.vy *= -1; }
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
-        ctx.globalAlpha = 0.8;
+        ctx.globalAlpha = 0.75;
         ctx.fill();
         ctx.globalAlpha = 1;
       }
@@ -126,33 +135,64 @@ export default function HeroCanvas() {
       animId = requestAnimationFrame(draw);
     }
 
-    const onMouseMove = (e) => {
+    // Named handlers so they can be removed correctly
+    function onMouseMove(e) {
       const rect = canvas.getBoundingClientRect();
       mouse = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-    };
+    }
+
+    function onMouseLeave() {
+      mouse = { x: -9999, y: -9999 };
+    }
+
+    function onResize() {
+      resize();
+      init();
+    }
+
+    // Pause animation when tab is not visible (saves CPU/battery)
+    function onVisibilityChange() {
+      if (document.hidden) {
+        running = false;
+        cancelAnimationFrame(animId);
+      } else {
+        running = true;
+        animId = requestAnimationFrame(draw);
+      }
+    }
 
     resize();
     init();
     draw();
 
-    window.addEventListener("resize", () => { resize(); init(); });
+    window.addEventListener("resize", onResize);
     canvas.addEventListener("mousemove", onMouseMove);
+    canvas.addEventListener("mouseleave", onMouseLeave);
+    document.addEventListener("visibilitychange", onVisibilityChange);
 
     return () => {
+      running = false;
       cancelAnimationFrame(animId);
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", onResize);
       canvas.removeEventListener("mousemove", onMouseMove);
+      canvas.removeEventListener("mouseleave", onMouseLeave);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <FloatingShapes />
-      <canvas
-        ref={canvasRef}
-        style={{ width: "100%", height: "100%", display: "block" }}
-        className="pointer-events-auto"
-      />
+    <div
+      className="absolute inset-0 overflow-hidden pointer-events-none"
+      aria-hidden="true"
+    >
+      <FloatingShapes reduced={prefersReduced} />
+      {!prefersReduced && (
+        <canvas
+          ref={canvasRef}
+          style={{ width: "100%", height: "100%", display: "block" }}
+          className="pointer-events-auto"
+        />
+      )}
     </div>
   );
 }
