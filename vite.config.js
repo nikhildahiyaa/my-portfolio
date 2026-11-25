@@ -9,8 +9,8 @@ export default defineConfig({
         manualChunks: {
           'vendor-react': ['react', 'react-dom'],
           'vendor-motion': ['framer-motion'],
-          'vendor-charts': ['recharts'],
-          'vendor-three': ['three', '@react-three/fiber', '@react-three/drei'],
+          // Only requested by the lazy-loaded hero scene — never on the critical path.
+          'vendor-three': ['three'],
         },
       },
     },

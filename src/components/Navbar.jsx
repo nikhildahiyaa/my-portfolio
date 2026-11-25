@@ -1,135 +1,153 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { FileDown, Menu, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { FileText, Menu, X } from "lucide-react";
 import { PROFILE } from "../data/profile";
+import { useFocusTrap } from "../hooks/useFocusTrap";
+import { EASE } from "../styles/tokens";
 
-const NAV_LABELS = {
-  home: "Home",
-  about: "About",
-  experience: "Experience",
-  impact: "Impact",
-  projects: "Projects",
-  skills: "Skills",
-  contact: "Contact",
-};
+export const NAV_ITEMS = [
+  { id: "home", label: "Home" },
+  { id: "about", label: "About" },
+  { id: "experience", label: "Experience" },
+  { id: "projects", label: "Projects" },
+  { id: "skills", label: "Skills" },
+  { id: "contact", label: "Contact" },
+];
 
-export function Navbar({ sections, active }) {
-  const [mobileOpen, setMobileOpen] = useState(false);
+function Monogram() {
+  return (
+    <a href="#home" className="group flex items-center gap-2.5 rounded-full pr-2" aria-label={`${PROFILE.name}, back to top`}>
+      <span className="relative grid h-9 w-9 place-items-center rounded-full border border-line-strong bg-elevated text-[13px] font-semibold tracking-tight text-ink shadow-surface">
+        <span className="absolute inset-0 rounded-full bg-[conic-gradient(from_200deg,rgba(139,92,246,0.55),rgba(34,211,238,0.45),transparent_60%)] opacity-60 [mask:radial-gradient(circle,transparent_62%,#000_64%)]" />
+        ND
+      </span>
+      <span className="hidden text-sm font-medium tracking-tight text-ink lg:inline">{PROFILE.name}</span>
+    </a>
+  );
+}
 
-  function handleNavClick() {
-    setMobileOpen(false);
-  }
+export function Navbar({ active }) {
+  const reduce = useReducedMotion();
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const sheetRef = useRef(null);
+  useFocusTrap(sheetRef, open, () => setOpen(false));
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // close the mobile sheet when resizing up to desktop
+  useEffect(() => {
+    const mql = window.matchMedia("(min-width: 768px)");
+    const onChange = () => mql.matches && setOpen(false);
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-md bg-slate-950/70 border-b border-white/5">
-      <nav
-        className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4"
-        role="navigation"
-        aria-label="Primary navigation"
-      >
-        {/* Logo */}
-        <a
-          href="#home"
-          className="font-semibold tracking-tight text-indigo-300 shrink-0 text-sm sm:text-base"
-          aria-label="Go to top"
+    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
+      <div ref={sheetRef} className="mx-auto max-w-[1120px]">
+        <nav
+          aria-label="Primary"
+          className={[
+            "relative flex h-14 items-center justify-between gap-3 rounded-full border pl-2.5 pr-2 transition-all duration-300 ease-premium",
+            scrolled || open
+              ? "border-line-strong bg-[#0b0b13]/75 shadow-raised backdrop-blur-xl"
+              : "border-line bg-[#0b0b13]/40 backdrop-blur-md",
+          ].join(" ")}
         >
-          {PROFILE.name}
-        </a>
+          {/* hairline top highlight */}
+          <span className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" aria-hidden="true" />
 
-        {/* Desktop nav links */}
-        <div className="hidden md:flex items-center gap-5 text-sm flex-1 justify-center">
-          {sections.map((id) => (
+          <Monogram />
+
+          <ul className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-0.5 md:flex">
+            {NAV_ITEMS.map((item) => {
+              const isActive = active === item.id;
+              return (
+                <li key={item.id} className="relative">
+                  <a
+                    href={`#${item.id}`}
+                    aria-current={isActive ? "location" : undefined}
+                    className={`relative z-10 block rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors duration-200 lg:px-4 ${
+                      isActive ? "text-ink" : "text-muted hover:text-ink"
+                    }`}
+                  >
+                    {item.label}
+                  </a>
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-active"
+                      transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 420, damping: 34 }}
+                      className="absolute inset-0 rounded-full border border-white/10 bg-white/[0.07] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+                      aria-hidden="true"
+                    />
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="flex items-center gap-1.5">
             <a
-              key={id}
-              href={`#${id}`}
-              className={
-                "whitespace-nowrap transition-colors duration-150 " +
-                (active === id
-                  ? "text-indigo-300 font-medium"
-                  : "text-slate-400 hover:text-slate-200")
-              }
-              aria-current={active === id ? "page" : undefined}
+              href={PROFILE.socials.resume}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex h-10 items-center gap-2 rounded-full bg-ink px-4 text-[13px] font-semibold text-shell transition-colors hover:bg-white"
             >
-              {NAV_LABELS[id] ?? id.charAt(0).toUpperCase() + id.slice(1)}
+              <FileText className="h-3.5 w-3.5" aria-hidden="true" />
+              Resume
+              <span className="sr-only">(PDF, opens in new tab)</span>
             </a>
-          ))}
-        </div>
+            <button
+              type="button"
+              onClick={() => setOpen((o) => !o)}
+              className="grid h-10 w-10 place-items-center rounded-full text-muted transition-colors hover:bg-white/5 hover:text-ink md:hidden"
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              aria-controls="mobile-nav"
+            >
+              {open ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
+            </button>
+          </div>
+        </nav>
 
-        {/* Desktop resume button */}
-        <div className="hidden md:flex shrink-0">
-          <a
-            href={PROFILE.socials.resume}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-4 py-2 transition-colors"
-            aria-label="Download resume PDF"
-          >
-            <FileDown className="h-4 w-4" aria-hidden="true" />
-            Resume
-          </a>
-        </div>
-
-        {/* Mobile hamburger */}
-        <button
-          className="md:hidden p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-colors"
-          onClick={() => setMobileOpen((o) => !o)}
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          aria-expanded={mobileOpen}
-          aria-controls="mobile-menu"
-        >
-          {mobileOpen ? (
-            <X className="h-5 w-5" aria-hidden="true" />
-          ) : (
-            <Menu className="h-5 w-5" aria-hidden="true" />
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              id="mobile-nav"
+              initial={reduce ? { opacity: 0 } : { opacity: 0, y: -8, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={reduce ? { opacity: 0 } : { opacity: 0, y: -6, scale: 0.98 }}
+              transition={{ duration: 0.25, ease: EASE }}
+              className="mt-2 origin-top rounded-[24px] border border-line-strong bg-[#0b0b13]/95 p-2 shadow-raised backdrop-blur-xl md:hidden"
+            >
+              <ul className="grid gap-0.5">
+                {NAV_ITEMS.map((item, i) => (
+                  <li key={item.id}>
+                    <a
+                      href={`#${item.id}`}
+                      data-autofocus={i === 0 ? "" : undefined}
+                      onClick={() => setOpen(false)}
+                      aria-current={active === item.id ? "location" : undefined}
+                      className={`flex min-h-[48px] items-center justify-between rounded-2xl px-4 text-[15px] font-medium transition-colors ${
+                        active === item.id ? "bg-white/[0.06] text-ink" : "text-zinc-300 hover:bg-white/[0.04] hover:text-ink"
+                      }`}
+                    >
+                      {item.label}
+                      <span className="font-mono text-[11px] text-subtle">0{i + 1}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
           )}
-        </button>
-      </nav>
-
-      {/* Mobile menu */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            id="mobile-menu"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="md:hidden overflow-hidden border-t border-white/5 bg-slate-950/90 backdrop-blur-md"
-          >
-            <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-1">
-              {sections.map((id) => (
-                <a
-                  key={id}
-                  href={`#${id}`}
-                  onClick={handleNavClick}
-                  className={
-                    "py-2.5 px-3 rounded-lg text-sm transition-colors " +
-                    (active === id
-                      ? "text-indigo-300 bg-indigo-500/10 font-medium"
-                      : "text-slate-300 hover:text-slate-100 hover:bg-white/5")
-                  }
-                  aria-current={active === id ? "page" : undefined}
-                >
-                  {NAV_LABELS[id] ?? id.charAt(0).toUpperCase() + id.slice(1)}
-                </a>
-              ))}
-              <div className="mt-3 pt-3 border-t border-white/5">
-                <a
-                  href={PROFILE.socials.resume}
-                  target="_blank"
-                  rel="noreferrer"
-                  onClick={handleNavClick}
-                  className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-4 py-2.5 transition-colors w-full justify-center"
-                  aria-label="Download resume PDF"
-                >
-                  <FileDown className="h-4 w-4" aria-hidden="true" />
-                  Download Resume
-                </a>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        </AnimatePresence>
+      </div>
     </header>
   );
 }

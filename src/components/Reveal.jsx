@@ -1,21 +1,23 @@
 import { motion, useReducedMotion } from "framer-motion";
+import { EASE, VIEWPORT } from "../styles/tokens";
 
-export function Reveal({ children, delay = 0, className = "" }) {
-  const shouldReduce = useReducedMotion();
-
-  if (shouldReduce) {
-    return <div className={className}>{children}</div>;
+/** Scroll reveal: short rise + fade, once. Plain wrapper for reduced motion. */
+export function Reveal({ children, delay = 0, y = 18, className = "", as = "div" }) {
+  const reduce = useReducedMotion();
+  if (reduce) {
+    const Tag = as;
+    return <Tag className={className}>{children}</Tag>;
   }
-
+  const M = motion[as] ?? motion.div;
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 28 }}
+    <M
+      initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.5, delay, ease: "easeOut" }}
+      viewport={VIEWPORT}
+      transition={{ duration: 0.6, delay, ease: EASE }}
       className={className}
     >
       {children}
-    </motion.div>
+    </M>
   );
 }

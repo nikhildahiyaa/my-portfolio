@@ -1,5 +1,7 @@
 // src/data/projects.js
 // All verified project information. Do not invent metrics, URLs, or demo links.
+// Visual covers are original illustrations rendered by src/components/visuals
+// (keyed by project id) — they are conceptual, not screenshots or model output.
 
 // Filter categories derived from project tags (curated for the filter bar)
 export const CATEGORIES = [
@@ -28,8 +30,6 @@ export const FEATURED_PROJECTS = [
     metric: "1,001 Records",
     tags: ["AI & Automation", "Data Engineering", "Python"],
     featured: true,
-    cover: null, // gradient cover used when null
-    coverGradient: "from-indigo-900/60 via-slate-900/80 to-slate-950",
     links: {
       code: "https://github.com/nikhildahiyaa/dataguard-ai-n8n",
       demo: null,
@@ -46,7 +46,7 @@ export const FEATURED_PROJECTS = [
       "REST APIs",
       "Pytest",
     ],
-    // Case study data — rendered by ProjectModal in Phase B
+    // Case study data — rendered by CaseStudySheet
     caseStudy: {
       businessProblem:
         "Credit risk portfolios require consistent, validated data inputs for accurate risk measurement. Manual data quality checks are time-consuming, error-prone and difficult to scale across large datasets with multiple interrelated validation rules.",
@@ -106,8 +106,6 @@ export const FEATURED_PROJECTS = [
     metric: "7.45% MAPE",
     tags: ["Forecasting", "Python", "Time Series"],
     featured: true,
-    cover:
-      "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=60",
     links: {
       code: "https://github.com/nikhildahiyaa/BCMEA-Labor-Forecast",
       demo: null,
@@ -155,8 +153,6 @@ export const FEATURED_PROJECTS = [
     metric: "50%+ Revenue Concentration",
     tags: ["Clustering", "Python", "Marketing"],
     featured: true,
-    cover:
-      "https://images.unsplash.com/photo-1545235617-9465d2a55698?auto=format&fit=crop&w=1200&q=60",
     links: {
       code: "https://github.com/nikhildahiyaa/Customer-Segmentation-Using-RFM-and-K-Means-Clustering",
       demo: null,
@@ -202,8 +198,6 @@ export const FEATURED_PROJECTS = [
     metric: "AUC 0.735",
     tags: ["Classification", "Python", "Product Analytics"],
     featured: true,
-    cover:
-      "https://images.unsplash.com/photo-1556761175-4b46a572b786?auto=format&fit=crop&w=1200&q=60",
     links: {
       code: "https://github.com/nikhildahiyaa/Airbnb-Booking-Prediction",
       demo: null,
@@ -250,8 +244,6 @@ export const FEATURED_PROJECTS = [
     metric: "95% Accuracy",
     tags: ["Computer Vision", "Python", "OCR"],
     featured: true,
-    cover:
-      "https://images.unsplash.com/photo-1531834685032-c34bf0d84c77?auto=format&fit=crop&w=1200&q=60",
     links: {
       code: "https://github.com/nikhildahiyaa/Image-Redaction-Project",
       demo: null,
@@ -303,8 +295,6 @@ export const OTHER_PROJECTS = [
     metric: "~15% Ad Lift",
     tags: ["Regression", "Python"],
     featured: false,
-    cover:
-      "https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=1200&q=60",
     links: {
       code: "https://github.com/nikhildahiyaa/Box-Office-Revenue-Prediction-Using-Linear-Regression-in-ML",
       demo: null,
@@ -320,8 +310,6 @@ export const OTHER_PROJECTS = [
     metric: "40% Faster",
     tags: ["Computer Vision", "Python"],
     featured: false,
-    cover:
-      "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=1200&q=60",
     links: {
       code: "https://github.com/nikhildahiyaa/Yet-Another-Image-Processor-YAIP-",
       demo: null,
@@ -338,8 +326,6 @@ export const OTHER_PROJECTS = [
     metric: "Benchmark Study",
     tags: ["Data Engineering", "Python"],
     featured: false,
-    cover:
-      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=60",
     links: {
       code: "https://github.com/nikhildahiyaa/Data-Compression-Performance-Analysis-for-Organizations-Dataset-",
       demo: null,
@@ -355,8 +341,6 @@ export const OTHER_PROJECTS = [
     metric: "2-opt Heuristic",
     tags: ["Algorithms", "Optimization"],
     featured: false,
-    cover:
-      "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&w=1200&q=60",
     links: {
       code: "https://github.com/nikhildahiyaa/Traveling-Salesperson-Problem-TSP-Solver",
       demo: null,
@@ -372,8 +356,6 @@ export const OTHER_PROJECTS = [
     metric: "A* / IDA*",
     tags: ["Algorithms"],
     featured: false,
-    cover:
-      "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1200&q=60",
     links: {
       code: "https://github.com/nikhildahiyaa/Fifteen-Puzzle-Solver",
       demo: null,
@@ -389,8 +371,6 @@ export const OTHER_PROJECTS = [
     metric: "ETL Pipeline",
     tags: ["ETL", "R"],
     featured: false,
-    cover:
-      "https://images.unsplash.com/photo-1454165205744-3b78555e5572?auto=format&fit=crop&w=1200&q=60",
     links: {
       code: "https://github.com/nikhildahiyaa/-Web-Scraping-with-R",
       demo: null,
@@ -402,5 +382,3 @@ export const OTHER_PROJECTS = [
 // Combined list for components that iterate all projects
 export const ALL_PROJECTS = [...FEATURED_PROJECTS, ...OTHER_PROJECTS];
 
-export const FALLBACK_COVER =
-  "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=60";

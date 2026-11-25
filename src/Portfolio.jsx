@@ -1,50 +1,42 @@
-// src/Portfolio.jsx — Main orchestrator
-import { useEffect } from "react";
-import { Navbar } from "./components/Navbar";
+// src/Portfolio.jsx — page orchestrator (presentation only; content lives in src/data)
+import { Navbar, NAV_ITEMS } from "./components/Navbar";
+import { ScrollProgress } from "./components/ScrollProgress";
 import { Footer } from "./components/Footer";
 import { Hero } from "./sections/Hero";
 import { About } from "./sections/About";
 import { Experience } from "./sections/Experience";
-import { ImpactDashboard } from "./sections/ImpactDashboard";
 import { Projects } from "./sections/Projects";
 import { Skills } from "./sections/Skills";
 import { Contact } from "./sections/Contact";
 import { useScrollSpy } from "./hooks/useScrollSpy";
 
-const SECTIONS = ["home", "about", "experience", "impact", "projects", "skills", "contact"];
+const SECTION_IDS = NAV_ITEMS.map((n) => n.id);
 
 export default function Portfolio() {
-  const active = useScrollSpy(SECTIONS);
-
-  useEffect(() => {
-    document.documentElement.classList.add("dark");
-  }, []);
+  const active = useScrollSpy(SECTION_IDS);
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-100 antialiased selection:bg-indigo-600/30 selection:text-white">
-
-      {/* Skip to main content */}
+    <div className="relative min-h-screen overflow-x-clip bg-shell text-ink">
       <a
-        href="#home"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-indigo-600 focus:px-4 focus:py-2 focus:text-white focus:text-sm focus:font-medium"
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-ink focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-shell"
       >
         Skip to main content
       </a>
 
-      {/* Ambient background blobs */}
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
-        <div className="absolute -top-60 left-1/2 -translate-x-1/2 h-[500px] w-[900px] rounded-full bg-gradient-to-r from-fuchsia-600/12 via-indigo-500/12 to-cyan-500/12 blur-3xl" />
-        <div className="absolute top-[60%] -left-40 h-72 w-72 rounded-full bg-indigo-600/8 blur-3xl" />
-        <div className="absolute top-[40%] -right-40 h-72 w-72 rounded-full bg-cyan-600/8 blur-3xl" />
+      {/* Global ambient depth — fixed, very low intensity */}
+      <div className="pointer-events-none fixed inset-0 -z-20" aria-hidden="true">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(99,102,241,0.10),transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_100%_100%,rgba(34,211,238,0.05),transparent_60%)]" />
       </div>
 
-      <Navbar sections={SECTIONS} active={active} />
+      <ScrollProgress />
+      <Navbar active={active} />
 
-      <main id="main-content">
+      <main id="main-content" tabIndex={-1} className="outline-none">
         <Hero />
         <About />
         <Experience />
-        <ImpactDashboard />
         <Projects />
         <Skills />
         <Contact />

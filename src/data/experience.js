@@ -2,9 +2,12 @@
 // Professional work experience in reverse chronological order.
 // All dates, roles, and achievements reflect verified information only.
 
+// `monogram` is a typographic mark (not a company logo).
+// The first 4 bullets are shown by default; the rest appear under "View details".
 export const EXPERIENCE = [
   {
     id: "atb",
+    monogram: "ATB",
     role: "Data Scientist — Credit Risk Analytics",
     company: "ATB Financial",
     type: "Contract",
@@ -43,6 +46,7 @@ export const EXPERIENCE = [
   },
   {
     id: "sfu-beedie",
+    monogram: "SFU",
     role: "Research Assistant",
     company: "Simon Fraser University — Beedie School of Business",
     type: "Research",
@@ -60,6 +64,7 @@ export const EXPERIENCE = [
   },
   {
     id: "ubc",
+    monogram: "UBC",
     role: "Data Analyst Co-op",
     company: "UBC Centre for Heart Lung Innovation",
     type: "Co-op",
@@ -77,6 +82,7 @@ export const EXPERIENCE = [
   },
   {
     id: "sfu-ra",
+    monogram: "SFU",
     role: "Research Assistant",
     company: "Simon Fraser University",
     type: "Research",
@@ -94,6 +100,7 @@ export const EXPERIENCE = [
   },
   {
     id: "ey",
+    monogram: "EY",
     role: "AI/ML Intern — Forensic Technology",
     company: "Ernst & Young",
     type: "Internship",
